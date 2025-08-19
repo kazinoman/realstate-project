@@ -128,7 +128,7 @@ const HeroSection = () => {
 
       <div className="container relative hidden lg:block">
         <div className="absolute left-0 -bottom-[15px]">{cornerIcon()}</div>
-        <div className="absolute left-10 bottom-0 bg-white p-4 rounded-t-[30px] flex items-center gap-4">
+        <div className="absolute left-10 bottom-0 bg-white py-4 px-8 rounded-t-[30px] flex items-center gap-4">
           <div className="scroll-down-item flex flex-col items-center space-y-2">
             {/* Mousey Container */}
             <div className="relative float-left w-[22px] h-[34px] rounded-[10px] px-[6px] border border-[#ddd] bg-[#f9f9f9] shadow-[0_10px_12px_0_rgba(0,0,0,0.07)]">
@@ -141,7 +141,7 @@ const HeroSection = () => {
 
           <p className="text-xs font-normal">scroll Down To Discover</p>
         </div>
-        <div className="absolute left-[226px] -bottom-3 rotate-90">{cornerIcon()}</div>
+        <div className="absolute left-[260px] -bottom-3 rotate-90">{cornerIcon()}</div>
       </div>
     </div>
   );
