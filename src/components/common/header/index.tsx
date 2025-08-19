@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { AiFillCaretDown } from "react-icons/ai";
-import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -10,9 +9,12 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-  NavigationMenuViewport,
 } from "@/components/ui/navigation-menu";
-import Link from "next/link";
+
+import { Button } from "@/components/ui/button";
+import { FaHeart } from "react-icons/fa6";
+import { LuSearch } from "react-icons/lu";
+import { IoPerson } from "react-icons/io5";
 
 const Header = () => {
   const [searchVisible, setSearchVisible] = useState<boolean>(false);
@@ -36,13 +38,12 @@ const Header = () => {
               <NavigationMenu>
                 <NavigationMenuList>
                   <NavigationMenuItem>
-                    <NavigationMenuTrigger className="text-xs">HOME</NavigationMenuTrigger>
-
+                    <NavigationMenuTrigger className="text-xs font-bold">HOME</NavigationMenuTrigger>
                     <NavigationMenuContent className="bg-black text-white">
                       <ul className="grid w-[200px] gap-1 ">
                         <li className="p-1.5">
                           <NavigationMenuLink asChild>
-                            <Link href="#">Components</Link>
+                            <Link href="#">Components </Link>
                           </NavigationMenuLink>
                         </li>
                         <li className="p-1.5">
@@ -63,8 +64,8 @@ const Header = () => {
               <NavigationMenu>
                 <NavigationMenuList>
                   <NavigationMenuItem>
-                    <NavigationMenuTrigger className="text-xs">LISTING</NavigationMenuTrigger>
-                    <NavigationMenuContent>
+                    <NavigationMenuTrigger className="text-xs font-bold">LISTING</NavigationMenuTrigger>
+                    <NavigationMenuContent className="bg-black text-white">
                       <ul className="grid w-[200px] gap-1 ">
                         <li className="p-1">
                           <NavigationMenuLink asChild>
@@ -90,8 +91,8 @@ const Header = () => {
               <NavigationMenu>
                 <NavigationMenuList>
                   <NavigationMenuItem>
-                    <NavigationMenuTrigger className="text-xs">NEWS</NavigationMenuTrigger>
-                    <NavigationMenuContent>
+                    <NavigationMenuTrigger className="text-xs font-bold">NEWS</NavigationMenuTrigger>
+                    <NavigationMenuContent className="bg-black text-white">
                       <ul className="grid w-[200px] gap-1 ">
                         <li className="p-1">
                           <NavigationMenuLink asChild>
@@ -117,8 +118,8 @@ const Header = () => {
               <NavigationMenu>
                 <NavigationMenuList>
                   <NavigationMenuItem>
-                    <NavigationMenuTrigger className="text-xs">PAGES</NavigationMenuTrigger>
-                    <NavigationMenuContent>
+                    <NavigationMenuTrigger className="text-xs font-bold">PAGES</NavigationMenuTrigger>
+                    <NavigationMenuContent className="bg-black text-white">
                       <ul className="grid w-[200px] gap-1 ">
                         <li className="p-1">
                           <NavigationMenuLink asChild>
@@ -148,42 +149,29 @@ const Header = () => {
         {/* right side content */}
         <div className="flex flex-row items-center">
           <div className="flex items-center justify-between">
-            {/* Mobile Nav Button */}
-            <div className="lg:hidden flex items-center">
-              <div className="space-y-1 cursor-pointer">
-                <span className="block w-6 h-0.5 bg-gray-800"></span>
-                <span className="block w-6 h-0.5 bg-gray-800"></span>
-                <span className="block w-6 h-0.5 bg-gray-800"></span>
-              </div>
-            </div>
-
+            {/* Add login button */}
+            <Button variant={"secondary"} className="py-1 px-4 rounded-full mr-4">
+              <IoPerson className="h-4 w-4" />
+              Sign In
+            </Button>
             {/* Right Side Buttons */}
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-5 border-l-2 border-[#eee] px-6">
               {/* Wishlist */}
               <div className="relative cursor-pointer" title="Wishlist">
                 {/* <FontAwesomeIcon icon={faHeart} className="text-gray-600" /> */}
-                <span className="absolute -top-1 -right-2 bg-red-500 text-white text-xs rounded-full px-1">3</span>
+                <FaHeart className="text-primary h-6 w-6" />
+                <span className="absolute top-4 -right-2 bg-red-500 text-white text-xs rounded-sm px-1">44</span>
               </div>
 
               {/* Add Property Button */}
               <Button variant={"secondary"} className="py-7 px-8">
                 Add your property
               </Button>
-              {/* <a href="add-listing.html" className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
-              Add Your Property
-            </a> */}
 
               {/* Search Button */}
               <button onClick={toggleSearch} className="text-gray-600 hover:text-blue-600 relative" title="Search">
-                {/* <FontAwesomeIcon icon={faMagnifyingGlass} /> */}
-                Search
+                <LuSearch className="text-primary h-6 w-6" />
               </button>
-
-              {/* Sign In */}
-              <a href="#" className="flex items-center text-gray-800 hover:text-blue-600">
-                {/* <FontAwesomeIcon icon={faUser} className="mr-1" /> */}
-                Sign In
-              </a>
             </div>
           </div>
 
