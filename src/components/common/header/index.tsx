@@ -15,12 +15,14 @@ import { Button } from "@/components/ui/button";
 import { FaHeart } from "react-icons/fa6";
 import { LuSearch } from "react-icons/lu";
 import { IoPerson } from "react-icons/io5";
+import Modal from "@/components/ui/modal";
 
 const Header = () => {
   const [searchVisible, setSearchVisible] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<string>("sale");
+  const [isOpen, setIsOpen] = useState(false);
 
-  const toggleSearch = () => setSearchVisible(!searchVisible);
+  const toggleSearch = () => setIsOpen(!isOpen);
 
   return (
     <header className="bg-white shadow-sm py-4 h-24 flex flex-row items-center justify-center">
@@ -33,14 +35,14 @@ const Header = () => {
           </a>
 
           {/* Navigation */}
-          <nav className="hidden lg:flex flex-grow justify-center border-x-2 border-[#eee] px-10">
+          <nav className="hidden lg:flex flex-grow justify-center border-x border-[#eee] px-10">
             <ul className="flex space-x-1">
               <NavigationMenu>
                 <NavigationMenuList>
                   <NavigationMenuItem>
                     <NavigationMenuTrigger className="text-xs font-bold">HOME</NavigationMenuTrigger>
-                    <NavigationMenuContent className="bg-black text-white">
-                      <ul className="grid w-[200px] gap-1 ">
+                    <NavigationMenuContent className="bg-black text-white border-none">
+                      <ul className="grid w-[200px] gap-1  border-none">
                         <li className="p-1.5">
                           <NavigationMenuLink asChild>
                             <Link href="#">Components </Link>
@@ -155,7 +157,7 @@ const Header = () => {
               Sign In
             </Button>
             {/* Right Side Buttons */}
-            <div className="flex items-center space-x-5 border-l-2 border-[#eee] px-6">
+            <div className="flex items-center space-x-5 border-l border-[#eee] px-6">
               {/* Wishlist */}
               <div className="relative cursor-pointer" title="Wishlist">
                 {/* <FontAwesomeIcon icon={faHeart} className="text-gray-600" /> */}
@@ -268,6 +270,28 @@ const Header = () => {
           )}
         </div>
       </div>
+
+      <Modal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        position="top-right"
+        backdropBlur={true}
+        containerClassName="p-8"
+        closeOnBackdropClick={true}
+      >
+        <div className="bg-white rounded-lg shadow-xl p-6 min-w-[300px]">
+          <h2 className="text-xl font-bold mb-4">Custom Modal</h2>
+          <p>Your content here</p>
+
+          <p className="max-w-[200px]">
+            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Distinctio officiis, tempore soluta, voluptatum
+            iure nihil consequuntur porro
+          </p>
+          <button onClick={() => setIsOpen(false)} className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">
+            Close
+          </button>
+        </div>
+      </Modal>
     </header>
   );
 };
