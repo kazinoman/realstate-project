@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { IoMdClose } from "react-icons/io";
 
 interface ModalProps {
   isOpen: boolean;
@@ -53,13 +54,13 @@ const Modal: React.FC<ModalProps> = ({
     <div className="fixed inset-0 z-50">
       {/* Backdrop */}
       <div
-        className={`fixed inset-0 bg-black bg-opacity-50 ${backdropBlur ? "backdrop-blur-sm" : ""}`}
+        className={`fixed inset-0 bg-black bg-opacity-50 ${backdropBlur ? "backdrop-blur-sm" : ""} overflow-hidden`}
         onClick={closeOnBackdropClick ? onClose : undefined}
       />
 
       {/* Modal container */}
       <div
-        className={`flex min-h-screen p-4 ${positionClasses[position]} ${containerClassName}`}
+        className={`flex min-h-screen p-4 ${positionClasses[position]} ${containerClassName} overflow-hidden`}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="relative">{children}</div>

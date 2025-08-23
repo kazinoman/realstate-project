@@ -17,11 +17,17 @@ import { LuSearch } from "react-icons/lu";
 import { IoPerson } from "react-icons/io5";
 import Modal from "@/components/ui/modal";
 import AuthenticationComponent from "@/components/authentication";
+import { IoMdClose } from "react-icons/io";
+import ModalCloseIcon from "@/components/ui/modalCloseIcon";
+import { useBreakpoint } from "@/hooks/useBreakpoint";
 
 const Header = () => {
   const [searchVisible, setSearchVisible] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<string>("sale");
   const [isOpen, setIsOpen] = useState(false);
+
+  const { isMd, isSm } = useBreakpoint();
+  console.log({ isMd, isSm });
 
   const [openLoginModal, setOpenLoginModal] = useState<boolean>(false);
 
@@ -304,12 +310,13 @@ const Header = () => {
         <Modal
           isOpen={openLoginModal}
           onClose={() => setOpenLoginModal(false)}
-          position="center"
+          position={isMd || isSm ? "top" : "center"}
           backdropBlur={true}
           containerClassName="p-8"
           closeOnBackdropClick={true}
         >
           <div className="items-center justify-center p-2 backdrop-blur-2xl bg-white/30 rounded-2xl">
+            <ModalCloseIcon onClose={() => setOpenLoginModal(false)} />
             <div className="bg-white rounded-lg shadow-2xl min-w-[300px]">
               <AuthenticationComponent />
             </div>
