@@ -4,7 +4,7 @@ import { CustomTabs } from "../common/customTabs";
 
 const AuthenticationComponent = () => {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 w-[60dvw]">
+    <div className="grid grid-cols-1 lg:grid-cols-2 w-[50dvw]">
       {/* Left Column (hidden on md & sm) */}
       <div className="relative hidden lg:flex items-center justify-center text-white h-full min-h-[600px]">
         <LeftSideImage />
