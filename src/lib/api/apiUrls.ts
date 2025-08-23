@@ -1,0 +1,29 @@
+// lib/api/apiUrls.ts
+// This file contains all API endpoints as constants or functions for easy management and reuse.
+// Update base URL as per your environment (e.g., from env variables).
+
+const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://api.example.com";
+
+export const API_URLS = {
+  // User-related endpoints
+  users: {
+    list: () => `${BASE_URL}/users`,
+    getById: (id: string | number) => `${BASE_URL}/users/${id}`,
+    create: () => `${BASE_URL}/users`,
+    update: (id: string | number) => `${BASE_URL}/users/${id}`,
+    delete: (id: string | number) => `${BASE_URL}/users/${id}`,
+  },
+
+  // Add more endpoints as needed, e.g., auth, products, etc.
+  auth: {
+    login: () => `${BASE_URL}/auth/login`,
+    register: () => `${BASE_URL}/auth/register`,
+    refreshToken: () => `${BASE_URL}/auth/refresh`,
+  },
+
+  // Example for products
+  products: {
+    list: () => `${BASE_URL}/products`,
+    getById: (id: string | number) => `${BASE_URL}/products/${id}`,
+  },
+};
