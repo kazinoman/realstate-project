@@ -32,7 +32,7 @@ const AuthenticationComponent = () => {
   ];
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2  lg:w-[90dvw] xl:w-[50dvw] ">
+    <div className="grid grid-cols-1 lg:grid-cols-2  lg:w-[90dvw] xl:w-[80dvw] 2xl:w-[50dvw] ">
       {/* Left Column (hidden on md & sm) */}
       <div className="relative hidden lg:flex items-center justify-center text-white h-full min-h-[600px]">
         <LeftSideImage />

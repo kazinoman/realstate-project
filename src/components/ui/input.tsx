@@ -9,7 +9,7 @@ interface InputProps extends React.ComponentProps<"input"> {
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, leftIcon, rightIcon, ...props }, ref) => {
     return (
-      <div className="rounded relative flex items-center border border-input bg-transparent px-3 py-1 h-[56px]">
+      <div className="rounded relative flex items-center border border-default bg-transparent px-3 py-1 h-[56px]">
         {leftIcon && <span className="">{leftIcon}</span>}
         <input
           type={type}

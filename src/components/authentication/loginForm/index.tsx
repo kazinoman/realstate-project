@@ -24,9 +24,9 @@ const LoginForm = () => {
         rightIcon={<FaEye className="text-secondary h-5 w-4" />}
       />
 
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between py-2">
         <Checkbox label="Remember me" />
-        <Typography variant="muted" className="text-xs hover:underline cursor-pointer">
+        <Typography variant="muted" className="text-xs hover:underline cursor-pointer font-semibold">
           Lost Your Password?
         </Typography>
       </div>
