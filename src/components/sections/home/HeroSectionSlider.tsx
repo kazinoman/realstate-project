@@ -86,7 +86,7 @@ const HeroSection = () => {
           </div>
 
           {/* Right Form */}
-          <div className="hidden items-center justify-center p-4 backdrop-blur-2xl rounded-2xl lg:flex">
+          <div className="hidden items-center justify-center p-2 backdrop-blur-2xl rounded-2xl lg:flex">
             <div className="w-full min-w-[450px] rounded-2xl bg-white p-6">
               <h2 className="mb-6 text-2xl font-bold text-gray-800">Get Started</h2>
               <form className="space-y-4">

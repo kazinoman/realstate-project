@@ -16,11 +16,14 @@ import { FaHeart } from "react-icons/fa6";
 import { LuSearch } from "react-icons/lu";
 import { IoPerson } from "react-icons/io5";
 import Modal from "@/components/ui/modal";
+import AuthenticationComponent from "@/components/authentication";
 
 const Header = () => {
   const [searchVisible, setSearchVisible] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<string>("sale");
   const [isOpen, setIsOpen] = useState(false);
+
+  const [openLoginModal, setOpenLoginModal] = useState<boolean>(false);
 
   const toggleSearch = () => setIsOpen(!isOpen);
 
@@ -152,7 +155,11 @@ const Header = () => {
         <div className="flex flex-row items-center">
           <div className="flex items-center justify-between">
             {/* Add login button */}
-            <Button variant={"secondary"} className="py-1 px-4 rounded-full mr-4">
+            <Button
+              variant={"secondary"}
+              className="py-1 px-4 rounded-full mr-4"
+              onClick={() => setOpenLoginModal(true)}
+            >
               <IoPerson className="h-4 w-4" />
               Sign In
             </Button>
@@ -292,6 +299,23 @@ const Header = () => {
           </button>
         </div>
       </Modal>
+
+      {openLoginModal && (
+        <Modal
+          isOpen={openLoginModal}
+          onClose={() => setOpenLoginModal(false)}
+          position="center"
+          backdropBlur={true}
+          containerClassName="p-8"
+          closeOnBackdropClick={true}
+        >
+          <div className="items-center justify-center p-2 backdrop-blur-2xl bg-white/30 rounded-2xl">
+            <div className="bg-white rounded-lg shadow-2xl min-w-[300px]">
+              <AuthenticationComponent />
+            </div>
+          </div>
+        </Modal>
+      )}
     </header>
   );
 };
