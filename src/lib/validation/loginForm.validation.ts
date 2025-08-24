@@ -1,13 +1,12 @@
 "use client";
 
-import { z } from "zod";
+import { email, z } from "zod";
 
 export const loginSchema = z.object({
   email: z
     .string()
     .min(1, { message: "Email is required" })
-    .email({ message: "Invalid email address" })
-    .max(100, { message: "Email must be less than 100 characters" }),
+    .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, { message: "Invalid email address" }),
 
   password: z
     .string()
