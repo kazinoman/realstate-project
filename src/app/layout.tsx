@@ -1,16 +1,9 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Poppins } from "next/font/google";
+import { Poppins } from "next/font/google";
+import { ContextWrapper } from "@/contexts/wrapper.context";
+import { Toaster } from "@/components/ui/sonner";
+
 import "./globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 const PoppinsFont = Poppins({
   variable: "--font-poppins",
@@ -33,7 +26,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${PoppinsFont.variable}  antialiased`}>{children}</body>
+      <body className={`${PoppinsFont.variable}  antialiased`}>
+        <Toaster position="top-right" duration={4000} />
+        <ContextWrapper>{children}</ContextWrapper>
+      </body>
     </html>
   );
 }

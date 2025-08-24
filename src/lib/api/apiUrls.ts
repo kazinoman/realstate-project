@@ -14,13 +14,17 @@ export const API_URLS = {
     create: () => `${BASE_URL}/users`,
     update: (id: string | number) => `${BASE_URL}/users/${id}`,
     delete: (id: string | number) => `${BASE_URL}/users/${id}`,
+    profile: () => `${BASE_URL}/auth/me`,
+    updateProfile: () => `${BASE_URL}/users/profile`,
   },
 
   // Add more endpoints as needed, e.g., auth, products, etc.
   auth: {
     login: () => `${BASE_URL}/auth/login`,
+    logout: () => `${BASE_URL}/auth/logout`,
     register: () => `${BASE_URL}/auth/register`,
     refreshToken: () => `${BASE_URL}/auth/refresh`,
+    resetPassword: () => `${BASE_URL}/auth/reset-password`,
   },
 
   // Example for products

@@ -15,8 +15,15 @@ import SocialLogin from "../socialLogin";
 import { LoginSchema, loginSchema } from "@/lib/validation/loginForm.validation";
 import { FormField } from "@/components/ui/form";
 import { Alert, AlertTitle } from "@/components/ui/alert";
+import LoaderOverlay from "@/components/ui/loader";
+import { toast } from "sonner";
+
+import { useUser } from "@/contexts/user.context";
 
 const LoginForm = () => {
+  const [showPassword, setShowPassword] = React.useState(false);
+  const { loading, login, error, success } = useUser();
+
   // 1. Define form.
   const form = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
@@ -30,15 +37,29 @@ const LoginForm = () => {
     formState: { errors },
   } = form;
 
-  console.log({ errors });
-
   // 2. Define a submit handler.
-  function onSubmit(values: LoginSchema) {
-    console.log(values, form);
+  async function onSubmit(values: LoginSchema) {
+    const data = {
+      username: values.email,
+      password: values.password,
+    };
+    await login(data, "Login successful!");
   }
+
+  React.useEffect(() => {
+    if (error) {
+      toast.success("Something went wrong!", { icon: "⚠️" });
+    }
+
+    if (success) {
+      toast.success(success, { icon: "🎉" });
+    }
+  }, [error, success]);
 
   return (
     <div className="pt-2 md:pt-[10px] px-0 md:px-6 pb-[30px] flex flex-col gap-4">
+      {loading && <LoaderOverlay />}
+
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className="pt-2 md:pt-[10px] px-0 md:px-6 pb-[30px] flex flex-col gap-4"
@@ -51,6 +72,7 @@ const LoginForm = () => {
               {...field}
               placeholder="User Name or Email Address"
               leftIcon={<IoPersonOutline className="text-secondary h-5 w-4" />}
+              autoComplete="off"
             />
           )}
         ></FormField>
@@ -67,9 +89,11 @@ const LoginForm = () => {
           render={({ field }) => (
             <Input
               {...field}
+              type={showPassword ? "text" : "password"}
               placeholder="Password"
               leftIcon={<GoLock className="text-secondary h-5 w-4" />}
-              rightIcon={<FaEye className="text-secondary h-5 w-4" />}
+              rightIcon={<FaEye className="text-secondary h-5 w-4" onClick={() => setShowPassword(!showPassword)} />}
+              autoComplete="new-password"
             />
           )}
         ></FormField>
@@ -79,12 +103,6 @@ const LoginForm = () => {
             <AlertTitle>{errors?.password?.message}</AlertTitle>
           </Alert>
         )}
-
-        {/* <Input
-          placeholder="Password"
-          leftIcon={<GoLock className="text-secondary h-5 w-4" />}
-          rightIcon={<FaEye className="text-secondary h-5 w-4" />}
-        /> */}
 
         <div className="flex items-center justify-between py-2">
           <Checkbox label="Remember me" />

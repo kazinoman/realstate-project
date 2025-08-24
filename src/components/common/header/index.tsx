@@ -315,7 +315,7 @@ const Header = () => {
           containerClassName="p-8"
           closeOnBackdropClick={true}
         >
-          <div className="items-center justify-center p-2 backdrop-blur-2xl bg-white/30 rounded-2xl">
+          <div className="items-center justify-center p-2  bg-white/30 rounded-2xl z-10">
             <ModalCloseIcon onClose={() => setOpenLoginModal(false)} />
             <div className="bg-white rounded-lg shadow-2xl min-w-[300px]">
               <AuthenticationComponent />
