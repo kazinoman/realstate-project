@@ -130,7 +130,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const getUserProfile = useCallback(
-    async (successMessage = "Profile fetched successfully!") => {
+    async (successMessage = "") => {
       setLoading(true);
       setError(null);
       setSuccess(null);

@@ -8,7 +8,8 @@ import { FaFacebookF } from "react-icons/fa";
 const SocialLogin = () => {
   return (
     <div className="flex flex-col items-center justify-center gap-4">
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 w-full">
+        {/* <div className="fle h-1 w-full bg-black border border-default"></div> */}
         <Separator className="flex-1" />
         <Typography variant="small" className="px-2">
           or

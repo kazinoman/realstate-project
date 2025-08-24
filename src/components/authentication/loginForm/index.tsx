@@ -57,13 +57,10 @@ const LoginForm = () => {
   }, [error, success]);
 
   return (
-    <div className="pt-2 md:pt-[10px] px-0 md:px-6 pb-[30px] flex flex-col gap-4">
+    <div className="pt-2 md:pt-[10px]  px-0 md:px-6 pb-[30px]">
       {loading && <LoaderOverlay />}
 
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="pt-2 md:pt-[10px] px-0 md:px-6 pb-[30px] flex flex-col gap-4"
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className="pt-2 md:pt-[10px] mb-4 flex flex-col gap-4">
         <FormField
           control={form.control}
           name="email"
