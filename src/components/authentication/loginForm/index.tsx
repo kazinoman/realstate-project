@@ -8,32 +8,95 @@ import { Typography } from "@/components/ui/typography";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
 import SocialLogin from "../socialLogin";
+import { LoginSchema, loginSchema } from "@/lib/validation/loginForm.validation";
+import { FormField } from "@/components/ui/form";
+import { Alert, AlertTitle } from "@/components/ui/alert";
 
 const LoginForm = () => {
+  // 1. Define form.
+  const form = useForm<LoginSchema>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  const {
+    formState: { errors },
+  } = form;
+
+  console.log({ errors });
+
+  // 2. Define a submit handler.
+  function onSubmit(values: LoginSchema) {
+    console.log(values, form);
+  }
+
   return (
     <div className="pt-2 md:pt-[10px] px-0 md:px-6 pb-[30px] flex flex-col gap-4">
-      <Input
-        placeholder="User Name or Email Address"
-        leftIcon={<IoPersonOutline className="text-secondary h-5 w-4" />}
-      />
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="pt-2 md:pt-[10px] px-0 md:px-6 pb-[30px] flex flex-col gap-4"
+      >
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <Input
+              {...field}
+              placeholder="User Name or Email Address"
+              leftIcon={<IoPersonOutline className="text-secondary h-5 w-4" />}
+            />
+          )}
+        ></FormField>
 
-      <Input
-        placeholder="Password"
-        leftIcon={<GoLock className="text-secondary h-5 w-4" />}
-        rightIcon={<FaEye className="text-secondary h-5 w-4" />}
-      />
+        {errors?.email && (
+          <Alert variant={"destructive"}>
+            <AlertTitle>{errors?.email?.message}</AlertTitle>
+          </Alert>
+        )}
 
-      <div className="flex items-center justify-between py-2">
-        <Checkbox label="Remember me" />
-        <Typography variant="muted" className="text-xs hover:underline cursor-pointer font-semibold">
-          Lost Your Password?
-        </Typography>
-      </div>
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <Input
+              {...field}
+              placeholder="Password"
+              leftIcon={<GoLock className="text-secondary h-5 w-4" />}
+              rightIcon={<FaEye className="text-secondary h-5 w-4" />}
+            />
+          )}
+        ></FormField>
 
-      <Button variant="default" animatedRounded className="h-[50px] uppercase text-[11px] font-bold">
-        Log In
-      </Button>
+        {errors.password && (
+          <Alert variant={"destructive"}>
+            <AlertTitle>{errors?.password?.message}</AlertTitle>
+          </Alert>
+        )}
+
+        {/* <Input
+          placeholder="Password"
+          leftIcon={<GoLock className="text-secondary h-5 w-4" />}
+          rightIcon={<FaEye className="text-secondary h-5 w-4" />}
+        /> */}
+
+        <div className="flex items-center justify-between py-2">
+          <Checkbox label="Remember me" />
+          <Typography variant="muted" className="text-xs hover:underline cursor-pointer font-semibold">
+            Lost Your Password?
+          </Typography>
+        </div>
+
+        <Button type="submit" variant="default" animatedRounded className="h-[50px] uppercase text-[11px] font-bold">
+          Log In
+        </Button>
+      </form>
 
       <SocialLogin />
     </div>

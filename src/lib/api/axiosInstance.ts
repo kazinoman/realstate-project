@@ -3,10 +3,10 @@
 // Includes support for AbortController via signal and a 401 error handler.
 
 import axios, { AxiosInstance, InternalAxiosRequestConfig, AxiosError, AxiosResponse } from "axios";
-import { API_URLS } from "./apiUrls"; // Not directly used here, but for consistency
+import { BASE_URL } from "./apiUrls";
 
 const axiosInstance: AxiosInstance = axios.create({
-  baseURL: API_URLS.users.list().split("/users")[0], // Dynamically set baseURL from apiUrls (adjust if needed)
+  baseURL: BASE_URL, // Dynamically set baseURL from apiUrls (adjust if needed)
   timeout: 10000, // 10 seconds timeout, adjustable
   headers: {
     "Content-Type": "application/json",
