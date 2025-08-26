@@ -48,7 +48,7 @@ const LoginForm = () => {
 
   React.useEffect(() => {
     if (error) {
-      toast.success("Something went wrong!", { icon: "⚠️" });
+      toast.success(error, { icon: "⚠️" });
     }
 
     if (success) {

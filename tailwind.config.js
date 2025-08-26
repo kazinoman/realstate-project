@@ -82,6 +82,21 @@ module.exports = {
           4: "hsl(var(--chart-4))",
           5: "hsl(var(--chart-5))",
         },
+        white: {
+          DEFAULT: "#fff",
+          100: "#f5f5f5",
+          200: "#1E1E1E",
+          300: "#d4d4d4",
+          400: "#a3a3a3",
+          500: "#737373",
+          600: "#525252",
+          700: "#404040",
+          800: "#262626",
+          900: "#171717",
+        },
+      },
+      boxShadow: {
+        100: "0 10px 24px 0 rgba(0,0,0,0.07)",
       },
       keyframes: {
         "accordion-down": {

@@ -2,7 +2,7 @@
 // This file contains all API endpoints as constants or functions for easy management and reuse.
 // Update base URL as per your environment (e.g., from env variables).
 
-import { API_BASE_URL } from "@/constant/env.consant";
+import { API_BASE_URL } from "@/constant/env.constant";
 
 export const BASE_URL = API_BASE_URL || "https://api.example.com";
 

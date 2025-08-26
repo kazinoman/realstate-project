@@ -4,6 +4,7 @@ import { ContextWrapper } from "@/contexts/wrapper.context";
 import { Toaster } from "@/components/ui/sonner";
 
 import "./globals.css";
+import Header from "@/components/common/header";
 
 const PoppinsFont = Poppins({
   variable: "--font-poppins",
@@ -28,7 +29,10 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${PoppinsFont.variable}  antialiased`}>
         <Toaster position="top-right" duration={4000} />
-        <ContextWrapper>{children}</ContextWrapper>
+        <ContextWrapper>
+          <Header />
+          {children}
+        </ContextWrapper>
       </body>
     </html>
   );

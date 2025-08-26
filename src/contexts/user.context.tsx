@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, useCallback, ReactNode, useEffect } from "react";
-import { apiPost, apiGet, apiPatch, cancelRequest } from "@/lib/api/apiUtilities";
+import { apiPost, apiGet, apiPatch } from "@/lib/api/apiUtilities";
 import { API_URLS } from "@/lib/api/apiUrls";
 import { LoginSchema } from "@/lib/validation/loginForm.validation";
 import { useRouter } from "next/navigation";
@@ -24,25 +24,23 @@ interface UserContextType {
   loading: boolean;
   error: string | null;
   success: string | null;
-  login: (data: { username: string; password: string }, successMessage?: string) => Promise<void>;
+  login: (data: LoginSchema, successMessage?: string) => Promise<void>;
   logout: (successMessage?: string) => Promise<void>;
   resetPassword: (email: string, successMessage?: string) => Promise<void>;
   getUserProfile: (successMessage?: string) => Promise<void>;
   updateUserProfile: (data: Partial<User>, successMessage?: string) => Promise<void>;
-  cancelRequest: (requestId?: string) => void;
   clearMessages: () => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export function UserProvider({ children }: { children: ReactNode }) {
-  const router = useRouter();
-
   const [user, setUser] = useState<User | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const router = useRouter();
 
   // Clear success and error messages after 5 seconds
   useEffect(() => {
@@ -61,54 +59,47 @@ export function UserProvider({ children }: { children: ReactNode }) {
     setError(null);
   }, []);
 
-  const login = useCallback(
-    async (data: { username: string; password: string }, successMessage = "Login successful!") => {
-      setLoading(true);
-      setError(null);
-      setSuccess(null);
-      try {
-        const { data: authResponse, requestId } = await apiPost<AuthResponse>(API_URLS.auth.login(), data, {
-          requestId: "login",
-        });
-        setUser(authResponse.user);
-        setIsAuthenticated(true);
-        setSuccess(successMessage);
-        if (typeof window !== "undefined") {
-          localStorage.setItem("accessToken", authResponse.accessToken);
-          localStorage.setItem("refreshToken", authResponse.refreshToken);
-        }
-      } catch (err: any) {
-        // console.error("Login Error:", err); // Debug log
-        setError(err.message || "Login failed");
-      } finally {
-        setLoading(false);
+  const login = useCallback(async (data: LoginSchema, successMessage = "Login successful!") => {
+    setLoading(true);
+    setError(null);
+    setSuccess(null);
+    const response = await apiPost<AuthResponse>(API_URLS.auth.login(), data);
+    if (response.error) {
+      setError(response.error.message || "Login failed");
+      setLoading(false);
+      return;
+    } else {
+      setUser(response.data!.user);
+      setIsAuthenticated(true);
+      setSuccess(successMessage);
+      if (typeof window !== "undefined") {
+        localStorage.setItem("accessToken", response.data!.accessToken);
+        localStorage.setItem("refreshToken", response.data!.refreshToken);
       }
-    },
-    []
-  );
+      setLoading(false);
+    }
+  }, []);
 
   const logout = useCallback(
     async (successMessage = "Logged out successfully!") => {
       setLoading(true);
       setError(null);
       setSuccess(null);
-      try {
-        await apiPost<unknown>(API_URLS.auth.logout(), {}, { requestId: "logout" });
-        setUser(null);
-        setIsAuthenticated(false);
-        setSuccess(successMessage);
-        if (typeof window !== "undefined") {
-          localStorage.removeItem("accessToken");
-          localStorage.removeItem("refreshToken");
-        }
-        router.push("/login");
-      } catch (err: any) {
-        console.error("Logout Error:", err); // Debug log
-        setError(err.message || "Logout failed");
-        throw err;
-      } finally {
+      const response = await apiPost<unknown>(API_URLS.auth.logout(), {});
+      if (response.error) {
+        setError(response.error.message || "Logout failed");
         setLoading(false);
+        return;
       }
+      setUser(null);
+      setIsAuthenticated(false);
+      setSuccess(successMessage);
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+      }
+      router.push("/login");
+      setLoading(false);
     },
     [router]
   );
@@ -117,41 +108,40 @@ export function UserProvider({ children }: { children: ReactNode }) {
     setLoading(true);
     setError(null);
     setSuccess(null);
-    try {
-      await apiPost<unknown>(API_URLS.auth.resetPassword(), { email }, { requestId: "reset-password" });
-      setSuccess(successMessage);
-    } catch (err: any) {
-      console.error("Reset Password Error:", err); // Debug log
-      setError(err.message || "Reset password failed");
-      throw err;
-    } finally {
+    const response = await apiPost<unknown>(API_URLS.auth.resetPassword(), { email });
+    if (response.error) {
+      setError(response.error.message || "Reset password failed");
       setLoading(false);
+      return;
     }
+    setSuccess(successMessage);
+    setLoading(false);
   }, []);
 
   const getUserProfile = useCallback(
-    async (successMessage = "") => {
+    async (successMessage = "Profile fetched successfully!") => {
       setLoading(true);
       setError(null);
       setSuccess(null);
-      try {
-        const { data, requestId } = await apiGet<User>(API_URLS.users.profile(), { requestId: "get-profile" });
-        setUser(data);
-        setIsAuthenticated(true);
-        setSuccess(successMessage);
-      } catch (err: any) {
-        console.error("getUserProfile Error:", err); // Debug log
-        setError(err.message || "Failed to fetch user profile");
-        if (err.status === 401 && typeof window !== "undefined") {
+      const response = await apiGet<User>(API_URLS.users.profile());
+      if (response.error) {
+        if (response.error.status === 401 && typeof window !== "undefined") {
           localStorage.removeItem("accessToken");
           localStorage.removeItem("refreshToken");
           setIsAuthenticated(false);
           setUser(null);
           router.push("/login");
+          setError("Session expired. Please log in again.");
+        } else {
+          setError(response.error.message || "Failed to fetch user profile");
         }
-      } finally {
         setLoading(false);
+        return;
       }
+      setUser(response.data!);
+      setIsAuthenticated(true);
+      setSuccess(successMessage);
+      setLoading(false);
     },
     [router]
   );
@@ -161,19 +151,15 @@ export function UserProvider({ children }: { children: ReactNode }) {
       setLoading(true);
       setError(null);
       setSuccess(null);
-      try {
-        const { data: updatedUser, requestId } = await apiPatch<User>(API_URLS.users.updateProfile(), data, {
-          requestId: "update-profile",
-        });
-        setUser(updatedUser);
-        setSuccess(successMessage);
-      } catch (err: any) {
-        console.error("Update Profile Error:", err); // Debug log
-        setError(err.message || "Failed to update user profile");
-        throw err;
-      } finally {
+      const response = await apiPatch<User>(API_URLS.users.updateProfile(), data);
+      if (response.error) {
+        setError(response.error.message || "Failed to update user profile");
         setLoading(false);
+        return;
       }
+      setUser(response.data!);
+      setSuccess(successMessage);
+      setLoading(false);
     },
     []
   );
@@ -181,18 +167,9 @@ export function UserProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const accessToken = typeof window !== "undefined" ? localStorage.getItem("accessToken") : null;
     if (accessToken) {
-      getUserProfile().catch((err) => {
-        console.error("Initial getUserProfile Error:", err); // Catch unhandled rejection
-        if (err.status === 401) {
-          setError("Session expired. Please log in again.");
-          router.push("/login");
-        }
-      });
+      getUserProfile();
     }
-    return () => {
-      cancelRequest("get-profile");
-    };
-  }, [getUserProfile, router]);
+  }, [getUserProfile]);
 
   return (
     <UserContext.Provider
@@ -207,7 +184,6 @@ export function UserProvider({ children }: { children: ReactNode }) {
         resetPassword,
         getUserProfile,
         updateUserProfile,
-        cancelRequest,
         clearMessages,
       }}
     >

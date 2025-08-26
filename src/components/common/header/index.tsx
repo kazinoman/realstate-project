@@ -34,8 +34,8 @@ const Header = () => {
   const toggleSearch = () => setIsOpen(!isOpen);
 
   return (
-    <header className="bg-white shadow-sm py-4 h-24 flex flex-row items-center justify-center">
-      <div className="container px-4 flex flex-row items-center justify-between">
+    <header className="bg-white  py-4 h-24 flex flex-row items-center justify-center border-b shadow-100">
+      <div className="container  flex flex-row items-center justify-between">
         {/* left side */}
         <div className="flex flex-row items-center justify-center gap-10 ">
           {/* Logo */}
