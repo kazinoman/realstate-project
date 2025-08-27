@@ -16,19 +16,19 @@ module.exports = {
         DEFAULT: "1rem", // 16px for default (xs and below)
         sm: "1rem", // 16px for sm (640px and up)
         md: "1.5rem", // 24px for md (768px and up)
-        lg: "2rem", // 32px for lg
-        xl: "3rem", // 48px for xl
-        "2xl": "3rem", // 48px for 2xl
+        lg: "2rem", // 32px for lg (1024px and up)
+        xl: "3rem", // 48px for xl (1280px and up)
+        "2xl": "3rem", // 48px for 2xl (1536px and up)
       },
       maxWidth: {
-        sm: "100%", // Full-width for sm
-        md: "100%", // Full-width for md
+        sm: "100%", // Full-width for sm (640px)
+        md: "100%", // Full-width for md (768px)
         lg: "1024px",
         xl: "1280px",
-        "2xl": "1536px",
-        "3xl": "1700px",
+        "2xl": "1700px", // 1700px for 2xl (1536px and up)
       },
     },
+
     extend: {
       fontFamily: {
         poppins: ["Poppins", "sans-serif"],
@@ -91,7 +91,7 @@ module.exports = {
           5: "hsl(var(--chart-5))",
         },
         white: {
-          default: "#fff",
+          DEFAULT: "#fff",
           50: "#fff",
           100: "#f5f5f5",
           200: "#1E1E1E",
@@ -106,6 +106,7 @@ module.exports = {
       },
       boxShadow: {
         100: "0 10px 24px 0 rgba(0,0,0,0.07)",
+        "inner-border": "inset 0 0 0 1px #eee", // Custom inset border
       },
       keyframes: {
         "accordion-down": {

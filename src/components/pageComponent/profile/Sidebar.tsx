@@ -10,6 +10,8 @@ import Link from "next/link";
 import { IoMenu } from "react-icons/io5";
 import { LiaUserEditSolid } from "react-icons/lia";
 import { IoClose } from "react-icons/io5";
+import { IoIosClose } from "react-icons/io";
+import { IoIosMenu } from "react-icons/io";
 import { BiSolidDownArrow } from "react-icons/bi";
 import Image from "next/image";
 
@@ -79,8 +81,8 @@ export default function ProfileSidebar() {
     >
       <div
         className={cn(
-          "w-full flex text-[10px] font-semibold transition-colors pl-4",
-          pathname === path ? "text-white" : "text-black group-hover:text-gray-800" // Optional: Adjust text color on hover
+          "w-full flex text-[10px] font-semibold transition-colors pl-4 uppercase",
+          pathname === path ? "text-black" : "text-black group-hover:text-gray-800" // Optional: Adjust text color on hover
         )}
       >
         {name}
@@ -96,91 +98,70 @@ export default function ProfileSidebar() {
     </Link>
   );
 
+  const logoutButton = () => (
+    <Button
+      variant="default"
+      className="w-full rounded-[10px] py-6 mt-2 bg-secondary hover:bg-gray-100 hover:text-black uppercase  hover:shadow-inner border border-default hover:border-default"
+    >
+      Log out
+    </Button>
+  );
+
   return (
     <div className="font-poppins p-[10px] h-full bg-white-50 rounded-2xl border border-default">
       <div className="flex flex-col gap-2">
-        <div className=" bg-white-50 p-[10px] md:p-0 rounded-2xl border border-default md:border-none">
-          <div className="flex items-center justify-between gap-4 bg-[#f2e9e0] p-2 rounded-xl">
-            {/* User Info */}
-            <div className="flex items-center justify-between gap-4">
-              {/* <div className="w-12 h-12 rounded-xl bg-gray-200 shadow-xl"></div> */}
-              <Image
-                src="/images/1.jpg"
-                alt="avatar"
-                width={50}
-                height={50}
-                className="w-[50px] h-[50px] rounded-xl shadow-xl"
-              />
-              <div className="flex flex-col">
-                <span className="text-xs md:text-[14px] font-semibold">Welcome : user</span>
-                <span className="text-xs text-gray-500">{user?.email}</span>
-              </div>
-            </div>
-            <div>
-              {open ? (
-                <IoClose className="text-2xl text-secondary block md:hidden" onClick={() => setOpen((prev) => !prev)} />
-              ) : (
-                <IoMenu className="text-xl text-secondary block md:hidden" onClick={() => setOpen((prev) => !prev)} />
-              )}
-              <LiaUserEditSolid className="text-2xl mr-2 text-secondary hidden md:block" />
+        <div className="flex items-center justify-between gap-4 bg-[#f2e9e0] p-2 rounded-xl">
+          {/* User Info */}
+          <div className="flex items-center justify-between gap-4">
+            {/* <div className="w-12 h-12 rounded-xl bg-gray-200 shadow-xl"></div> */}
+            <Image
+              src="/images/1.jpg"
+              alt="avatar"
+              width={50}
+              height={50}
+              className="w-[50px] h-[50px] rounded-xl shadow-xl"
+            />
+            <div className="flex flex-col">
+              <span className="text-xs md:text-[14px] font-semibold">Welcome : user</span>
+              <span className="text-xs text-gray-500">{user?.email}</span>
             </div>
           </div>
-
-          {/* Mobile dropdown */}
-          <div className="md:hidden relative">
-            <div
-              className={cn(
-                "rounded-lg  bg-white overflow-hidden transition-all duration-700 ease-in-out",
-                open ? "max-h-fit opacity-100" : "max-h-0 opacity-0"
-              )}
-            >
-              <div className="flex flex-col gap-2 pt-2">
-                {navItems.map((item) => (
-                  <NavButton key={item.path} {...item} />
-                ))}
-                <Button
-                  variant="destructive"
-                  className="w-full mt-2"
-                  onClick={() => logout("Logged out successfully!")}
-                >
-                  Logout
-                </Button>
-              </div>
-            </div>
+          <div>
+            {open ? (
+              <IoIosClose className="h-8 w-8 text-secondary block md:hidden" onClick={() => setOpen((prev) => !prev)} />
+            ) : (
+              <IoIosMenu className="h-8 w-8 text-secondary block md:hidden" onClick={() => setOpen((prev) => !prev)} />
+            )}
+            <LiaUserEditSolid
+              className="text-2xl mr-2 text-secondary hidden md:block cursor-pointer"
+              onClick={() => router.push(profileUrl.edit)}
+            />
           </div>
         </div>
 
         {/* Mobile dropdown */}
-        {/* <div className="md:hidden relative">
+        <div className="md:hidden relative">
           <div
             className={cn(
               "rounded-lg  bg-white overflow-hidden transition-all duration-700 ease-in-out",
-              open ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+              open ? "max-h-fit opacity-100" : "max-h-0 opacity-0"
             )}
           >
-            <div className="flex flex-col gap-1 p-2">
+            <div className="flex flex-col gap-2 pt-2">
               {navItems.map((item) => (
                 <NavButton key={item.path} {...item} />
               ))}
-              <Button variant="destructive" className="w-full mt-4" onClick={() => logout("Logged out successfully!")}>
-                Logout
-              </Button>
+              {logoutButton()}
             </div>
           </div>
-        </div> */}
+        </div>
 
         {/* Desktop sidebar */}
         <div className="hidden md:flex flex-col gap-2">
           {navItems.map((item) => (
             <NavButton key={item.path} {...item} />
           ))}
-          <Button
-            variant="default"
-            className="w-full rounded-[10px] py-6"
-            onClick={() => logout("Logged out successfully!")}
-          >
-            Logout
-          </Button>
+          {logoutButton()}
         </div>
       </div>
     </div>
