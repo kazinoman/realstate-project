@@ -20,31 +20,32 @@ import AuthenticationComponent from "@/components/authentication";
 import { IoMdClose } from "react-icons/io";
 import ModalCloseIcon from "@/components/ui/modalCloseIcon";
 import { useBreakpoint } from "@/hooks/useBreakpoint";
+import { useUser } from "@/contexts/user.context";
 
 const Header = () => {
   const [searchVisible, setSearchVisible] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<string>("sale");
   const [isOpen, setIsOpen] = useState(false);
 
+  const { isAuthenticated, user } = useUser();
   const { isMd, isSm } = useBreakpoint();
-  console.log({ isMd, isSm });
 
   const [openLoginModal, setOpenLoginModal] = useState<boolean>(false);
 
   const toggleSearch = () => setIsOpen(!isOpen);
 
   return (
-    <header className="bg-white  py-4 h-24 flex flex-row items-center justify-center border-b shadow-100">
-      <div className="container  flex flex-row items-center justify-between">
+    <header className=" bg-white py-4 h-24 flex flex-row items-center  border-b shadow-100">
+      <div className="container flex flex-row items-center justify-between w-full">
         {/* left side */}
         <div className="flex flex-row items-center justify-center gap-10 ">
           {/* Logo */}
-          <a href="#" className=" ml-7 h-3.5 leading-3.5 mt-[-6px]">
+          <a href="#" className="h-3.5 leading-3.5 mt-[-6px]">
             <img src="/images/logo.png" alt="Logo" className="h-full w-auto" />
           </a>
 
           {/* Navigation */}
-          <nav className="hidden lg:flex flex-grow justify-center border-x border-[#eee] px-10">
+          <nav className="hidden lg:flex flex-grow justify-center border-x border-[#eee] ">
             <ul className="flex space-x-1">
               <NavigationMenu>
                 <NavigationMenuList>
@@ -178,10 +179,11 @@ const Header = () => {
                 <span className="absolute top-4 -right-2 bg-red-500 text-white text-xs rounded-sm px-1">44</span>
               </div>
 
-              {/* Add Property Button */}
-              <Button variant={"secondary"} className="py-7 px-8">
-                Add your property
-              </Button>
+              {!isAuthenticated && (
+                <Button variant={"secondary"} className="py-7 px-8">
+                  Add your property
+                </Button>
+              )}
 
               {/* Search Button */}
               <button onClick={toggleSearch} className="text-gray-600 hover:text-blue-600 relative" title="Search">

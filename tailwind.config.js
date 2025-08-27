@@ -12,14 +12,21 @@ module.exports = {
   theme: {
     container: {
       center: true,
-      padding: "2rem",
-      screens: {
-        xs: "400px",
-        sm: "640px",
-        md: "768px",
-        lg: "1124px",
-        "2xl": "1400px",
-        "3xl": "1600px",
+      padding: {
+        DEFAULT: "1rem", // 16px for default (xs and below)
+        sm: "1rem", // 16px for sm (640px and up)
+        md: "1.5rem", // 24px for md (768px and up)
+        lg: "2rem", // 32px for lg
+        xl: "3rem", // 48px for xl
+        "2xl": "3rem", // 48px for 2xl
+      },
+      maxWidth: {
+        sm: "100%", // Full-width for sm
+        md: "100%", // Full-width for md
+        lg: "1024px",
+        xl: "1280px",
+        "2xl": "1536px",
+        "3xl": "1700px",
       },
     },
     extend: {
@@ -32,6 +39,7 @@ module.exports = {
         lg: "1024px",
         xl: "1280px",
         "2xl": "1536px",
+        "3xl": "1700px",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -83,10 +91,11 @@ module.exports = {
           5: "hsl(var(--chart-5))",
         },
         white: {
-          DEFAULT: "#fff",
+          default: "#fff",
+          50: "#fff",
           100: "#f5f5f5",
           200: "#1E1E1E",
-          300: "#d4d4d4",
+          300: "#F9F9F9",
           400: "#a3a3a3",
           500: "#737373",
           600: "#525252",
