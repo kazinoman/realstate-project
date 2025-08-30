@@ -8,6 +8,13 @@ import SignUp from "./signUpForm";
 import LoginForm from "./loginForm";
 
 const AuthenticationComponent = () => {
+  const [tabValue, setTabValue] = React.useState<"login" | "register">("login");
+
+  const handleChangeTab = (value: "login" | "register") => {
+    console.log(value);
+    setTabValue(value);
+  };
+
   const tabs = [
     {
       value: "login",
@@ -25,7 +32,7 @@ const AuthenticationComponent = () => {
       icon: IoIosPersonAdd,
       content: (
         <div className="p-4">
-          <SignUp />
+          <SignUp handleChangeTab={handleChangeTab} />
         </div>
       ),
     },
@@ -42,10 +49,12 @@ const AuthenticationComponent = () => {
       <div className="flex items-start justify-start lg:border-l lg:border-[#eee] px-0 pt-0 pl-0 w-full overflow-hidden">
         <CustomTabs
           tabs={tabs}
-          defaultValue="login"
-          className="w-full max-w-lg "
-          tabListStyle="rounded-md md:rounded-none"
-          singleTabStyle="rounded-sm md:rounded-none"
+          defaultValue={tabValue}
+          value={tabValue}
+          onValueChange={(val) => setTabValue(val as "login" | "register")}
+          className="w-full max-w-lg"
+          tabListStyle="rounded-md md:rounded-none  "
+          singleTabStyle="rounded-sm md:rounded-none h-[60px] md:border-b md:border-[#eee] "
         />
       </div>
     </div>

@@ -2,7 +2,8 @@
 
 import { z } from "zod";
 
-export const loginSchema = z.object({
+export const signUpSchema = z.object({
+  name: z.string().min(1, { message: "Name is required" }),
   email: z
     .string()
     .min(1, { message: "Email is required" })
@@ -18,6 +19,6 @@ export const loginSchema = z.object({
   // .regex(/[@$!%*?&]/, { message: "Password must contain at least one special character" })
 });
 
-export type LoginSchema = z.infer<typeof loginSchema>;
+export type SignUpSchema = z.infer<typeof signUpSchema>;
 
-export default loginSchema;
+export default signUpSchema;

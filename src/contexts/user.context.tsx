@@ -63,7 +63,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
         const response = await apiPost<LoginResponse["data"]>(API_URLS.auth.login(), data);
 
         if (!response.data?.success || !response.data?.data) {
-          const errorMessage = response.error?.message || "Login failed";
+          const errorMessage = response?.data?.error?.message || "Login failed";
 
           setError(errorMessage);
           toast.error(errorMessage);

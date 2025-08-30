@@ -60,6 +60,7 @@ const LoginForm = () => {
               placeholder="User Name or Email Address"
               leftIcon={<IoPersonOutline className="text-secondary h-5 w-4" />}
               autoComplete="off"
+              className="bg-white-300 autofill:shadow-[inset_0_0_0px_1000px_white] autofill:text-black"
             />
           )}
         ></FormField>

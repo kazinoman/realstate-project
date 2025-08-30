@@ -9,12 +9,12 @@ interface InputProps extends React.ComponentProps<"input"> {
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, leftIcon, rightIcon, ...props }, ref) => {
     return (
-      <div className="rounded relative flex items-center border border-default bg-transparent px-3 py-1 h-[56px]">
+      <div className="bg-white-300 rounded relative flex items-center border border-default bg-transparent px-3 py-1 h-[56px]">
         {leftIcon && <span className="">{leftIcon}</span>}
         <input
           type={type}
           className={cn(
-            "rounded flex h-9 w-full font-medium text-xs  transition-colors placeholder:text-xs file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+            "bg-white-300 rounded flex h-9 w-full font-medium text-xs  transition-colors placeholder:text-xs file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
             leftIcon && "pl-3",
             rightIcon && "pr-3",
             className

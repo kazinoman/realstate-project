@@ -17,6 +17,8 @@ interface CustomTabsProps {
   tabListStyle?: string;
   singleTabStyle?: string;
   contentStyle?: string;
+  value: string; // ✅ add value prop
+  onValueChange: (value: string) => void; // ✅ add onValueChange prop
 }
 
 export function CustomTabs({
@@ -27,10 +29,17 @@ export function CustomTabs({
   tabListStyle,
   singleTabStyle,
   contentStyle,
+  value,
+  onValueChange,
 }: CustomTabsProps) {
   return (
     <div className={className}>
-      <Tabs defaultValue={defaultValue || tabs[0]?.value} className={`w-full p-0 m-0 ${tabsStyle}`}>
+      <Tabs
+        defaultValue={defaultValue || tabs[0]?.value}
+        value={value}
+        onValueChange={onValueChange}
+        className={`w-full p-0 m-0 ${tabsStyle}`}
+      >
         <TabsList
           className={`grid w-full border border-gray-200 h-full p-0 m-0 ${tabListStyle}`}
           style={{ gridTemplateColumns: `repeat(${tabs.length}, minmax(0, 1fr))` }}
