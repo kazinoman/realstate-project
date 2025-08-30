@@ -103,6 +103,12 @@ module.exports = {
           800: "#262626",
           900: "#171717",
         },
+
+        popover: "hsl(var(--popover))",
+        "popover-foreground": "hsl(var(--popover-foreground))",
+        border: "hsl(var(--border))",
+        "muted-foreground": "hsl(var(--muted-foreground))",
+        foreground: "hsl(var(--foreground))",
       },
       boxShadow: {
         100: "0 10px 24px 0 rgba(0,0,0,0.07)",

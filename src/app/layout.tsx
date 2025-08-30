@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import { ContextWrapper } from "@/contexts/wrapper.context";
+import Header from "@/components/common/header";
 import { Toaster } from "@/components/ui/sonner";
+// import { Toaster } from "sonner";
 
 import "./globals.css";
-import Header from "@/components/common/header";
 
 const PoppinsFont = Poppins({
   variable: "--font-poppins",
@@ -28,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${PoppinsFont.variable}  antialiased`}>
-        <Toaster position="top-right" duration={4000} />
+        <Toaster position="top-right" duration={2000} richColors />
         <ContextWrapper>
           <Header />
           {children}

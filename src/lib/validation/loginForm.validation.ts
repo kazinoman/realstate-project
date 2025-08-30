@@ -3,8 +3,10 @@
 import { email, z } from "zod";
 
 export const loginSchema = z.object({
-  email: z.string().min(1, { message: "Email is required" }),
-  // .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, { message: "Invalid email address" }),
+  email: z
+    .string()
+    .min(1, { message: "Email is required" })
+    .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, { message: "Invalid email address" }),
 
   password: z
     .string()

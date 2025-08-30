@@ -4,19 +4,13 @@ import { createContext, useContext, useState, useCallback, ReactNode, useEffect 
 import { apiPost, apiGet, apiPatch } from "@/lib/api/apiUtilities";
 import { API_URLS } from "@/lib/api/apiUrls";
 import { LoginSchema } from "@/lib/validation/loginForm.validation";
+
 import { useRouter } from "next/navigation";
-
-interface User {
-  id: number;
-  name: string;
-  email: string;
-}
-
-interface AuthResponse {
-  accessToken: string;
-  refreshToken: string;
-  user: User;
-}
+import { LoginResponse, UserProfileResponse, User } from "@/types/apiResponse.type";
+import { STORAGE_KEYS } from "@/lib/localstorage/localstorage.keys";
+import { localStorageUtils } from "@/lib/localstorage";
+import { toast } from "sonner";
+import { clientCookies } from "@/lib/cookies";
 
 interface UserContextType {
   user: User | null;
@@ -36,7 +30,7 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export function UserProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -59,47 +53,80 @@ export function UserProvider({ children }: { children: ReactNode }) {
     setError(null);
   }, []);
 
-  const login = useCallback(async (data: LoginSchema, successMessage = "Login successful!") => {
-    setLoading(true);
-    setError(null);
-    setSuccess(null);
-    const response = await apiPost<AuthResponse>(API_URLS.auth.login(), data);
-    if (response.error) {
-      setError(response.error.message || "Login failed");
-      setLoading(false);
-      return;
-    } else {
-      setUser(response.data!.user);
-      setIsAuthenticated(true);
-      setSuccess(successMessage);
-      if (typeof window !== "undefined") {
-        localStorage.setItem("accessToken", response.data!.accessToken);
-        localStorage.setItem("refreshToken", response.data!.refreshToken);
+  const login = useCallback(
+    async (data: LoginSchema, successMessage = "Login successful!") => {
+      setLoading(true);
+      setError(null);
+      setSuccess(null);
+
+      try {
+        const response = await apiPost<LoginResponse["data"]>(API_URLS.auth.login(), data);
+
+        if (!response.data?.success || !response.data?.data) {
+          const errorMessage = response.error?.message || "Login failed";
+
+          setError(errorMessage);
+          toast.error(errorMessage);
+          setLoading(false);
+          return;
+        }
+
+        const { accessToken, refreshToken } = response.data.data;
+
+        // Save tokens and user
+        localStorageUtils.set(STORAGE_KEYS.ACCESS_TOKEN, accessToken);
+        localStorageUtils.set(STORAGE_KEYS.REFRESH_TOKEN, refreshToken);
+
+        clientCookies.set(STORAGE_KEYS.ACCESS_TOKEN, accessToken);
+        clientCookies.set(STORAGE_KEYS.REFRESH_TOKEN, refreshToken);
+
+        setIsAuthenticated(true);
+        setSuccess(successMessage);
+        toast.success(successMessage);
+
+        // Redirect to dashboard or home
+        // router.push("/dashboard");
+      } catch (err) {
+        const errorMessage = "An unexpected error occurred";
+        setError(errorMessage);
+        toast.error(errorMessage);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
-    }
-  }, []);
+    },
+    [router]
+  );
 
   const logout = useCallback(
     async (successMessage = "Logged out successfully!") => {
       setLoading(true);
       setError(null);
       setSuccess(null);
-      const response = await apiPost<unknown>(API_URLS.auth.logout(), {});
-      if (response.error) {
-        setError(response.error.message || "Logout failed");
+
+      try {
+        const response = await apiPost<unknown>(API_URLS.auth.logout(), {});
+        if (response.error) {
+          const errorMessage = response.error.message || "Logout failed";
+          setError(errorMessage);
+          toast.error(errorMessage);
+          setLoading(false);
+          return;
+        }
+
+        setUser(null);
+        setIsAuthenticated(false);
+        setSuccess(successMessage);
+        toast.success(successMessage);
+        localStorageUtils.delete(STORAGE_KEYS.ACCESS_TOKEN);
+        localStorageUtils.delete(STORAGE_KEYS.REFRESH_TOKEN);
+        router.push("/login");
+      } catch (err) {
+        const errorMessage = "An unexpected error occurred";
+        setError(errorMessage);
+        toast.error(errorMessage);
+      } finally {
         setLoading(false);
-        return;
       }
-      setUser(null);
-      setIsAuthenticated(false);
-      setSuccess(successMessage);
-      if (typeof window !== "undefined") {
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
-      }
-      router.push("/login");
-      setLoading(false);
     },
     [router]
   );
@@ -108,14 +135,25 @@ export function UserProvider({ children }: { children: ReactNode }) {
     setLoading(true);
     setError(null);
     setSuccess(null);
-    const response = await apiPost<unknown>(API_URLS.auth.resetPassword(), { email });
-    if (response.error) {
-      setError(response.error.message || "Reset password failed");
+
+    try {
+      const response = await apiPost<unknown>(API_URLS.auth.resetPassword(), { email });
+      if (response.error) {
+        const errorMessage = response.error.message || "Reset password failed";
+        setError(errorMessage);
+        toast.error(errorMessage);
+        setLoading(false);
+        return;
+      }
+      setSuccess(successMessage);
+      toast.success(successMessage);
+    } catch (err) {
+      const errorMessage = "An unexpected error occurred";
+      setError(errorMessage);
+      toast.error(errorMessage);
+    } finally {
       setLoading(false);
-      return;
     }
-    setSuccess(successMessage);
-    setLoading(false);
   }, []);
 
   const getUserProfile = useCallback(
@@ -123,25 +161,37 @@ export function UserProvider({ children }: { children: ReactNode }) {
       setLoading(true);
       setError(null);
       setSuccess(null);
-      const response = await apiGet<User>(API_URLS.users.profile());
-      if (response.error) {
-        if (response.error.status === 401 && typeof window !== "undefined") {
-          localStorage.removeItem("accessToken");
-          localStorage.removeItem("refreshToken");
-          setIsAuthenticated(false);
-          setUser(null);
-          router.push("/login");
-          setError("Session expired. Please log in again.");
-        } else {
-          setError(response.error.message || "Failed to fetch user profile");
+
+      try {
+        const response = await apiGet<UserProfileResponse["data"]>(API_URLS.users.profile());
+        if (response.error) {
+          if (response.error.status === 401) {
+            localStorageUtils.delete(STORAGE_KEYS.ACCESS_TOKEN);
+            localStorageUtils.delete(STORAGE_KEYS.REFRESH_TOKEN);
+            setIsAuthenticated(false);
+            setUser(null);
+            router.push("/");
+            setError("Session expired. Please log in again.");
+            toast.error("Session expired. Please log in again.");
+          } else {
+            const errorMessage = response.error.message || "Failed to fetch user profile";
+            setError(errorMessage);
+            toast.error(errorMessage);
+          }
+          setLoading(false);
+          return;
         }
+        setUser(response.data!.data!);
+        setIsAuthenticated(true);
+        setSuccess(successMessage);
+        toast.success(successMessage);
+      } catch (err) {
+        const errorMessage = "An unexpected error occurred";
+        setError(errorMessage);
+        toast.error(errorMessage);
+      } finally {
         setLoading(false);
-        return;
       }
-      setUser(response.data!);
-      setIsAuthenticated(true);
-      setSuccess(successMessage);
-      setLoading(false);
     },
     [router]
   );
@@ -151,22 +201,36 @@ export function UserProvider({ children }: { children: ReactNode }) {
       setLoading(true);
       setError(null);
       setSuccess(null);
-      const response = await apiPatch<User>(API_URLS.users.updateProfile(), data);
-      if (response.error) {
-        setError(response.error.message || "Failed to update user profile");
+
+      try {
+        const response = await apiPatch<UserProfileResponse["data"]>(API_URLS.users.updateProfile(), data);
+        if (response.error) {
+          const errorMessage = response.error.message || "Failed to update user profile";
+          setError(errorMessage);
+          toast.error(errorMessage);
+          setLoading(false);
+          return;
+        }
+        setUser(response.data!.data!);
+        setSuccess(successMessage);
+        toast.success(successMessage);
+      } catch (err) {
+        const errorMessage = "An unexpected error occurred";
+        setError(errorMessage);
+        toast.error(errorMessage);
+      } finally {
         setLoading(false);
-        return;
       }
-      setUser(response.data!);
-      setSuccess(successMessage);
-      setLoading(false);
     },
     []
   );
 
   useEffect(() => {
-    const accessToken = typeof window !== "undefined" ? localStorage.getItem("accessToken") : null;
+    const accessToken = localStorageUtils.get<string>(STORAGE_KEYS.ACCESS_TOKEN);
+    console.log("accessToken", accessToken);
+
     if (accessToken) {
+      setIsAuthenticated(true);
       getUserProfile();
     }
   }, [getUserProfile]);

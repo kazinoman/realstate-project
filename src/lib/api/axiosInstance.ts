@@ -4,6 +4,8 @@
 
 import axios, { AxiosInstance, InternalAxiosRequestConfig, AxiosError, AxiosResponse } from "axios";
 import { BASE_URL } from "./apiUrls";
+import { STORAGE_KEYS } from "../localstorage/localstorage.keys";
+import { localStorageUtils } from "../localstorage";
 
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: BASE_URL, // Dynamically set baseURL from apiUrls (adjust if needed)
@@ -18,7 +20,7 @@ const axiosInstance: AxiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     // Example: Add Bearer token from localStorage (adapt for your auth system)
-    const token = typeof window !== "undefined" ? localStorage.getItem("accessToken") : null;
+    const token = typeof window !== "undefined" ? localStorageUtils.get(STORAGE_KEYS.ACCESS_TOKEN) : null;
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

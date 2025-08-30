@@ -16,7 +16,6 @@ import { LoginSchema, loginSchema } from "@/lib/validation/loginForm.validation"
 import { FormField } from "@/components/ui/form";
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import LoaderOverlay from "@/components/ui/loader";
-import { toast } from "sonner";
 
 import { useUser } from "@/contexts/user.context";
 
@@ -40,21 +39,12 @@ const LoginForm = () => {
   // 2. Define a submit handler.
   async function onSubmit(values: LoginSchema) {
     const data = {
-      username: values.email,
+      email: values.email,
       password: values.password,
     };
+
     await login(data, "Login successful!");
   }
-
-  React.useEffect(() => {
-    if (error) {
-      toast.success(error, { icon: "⚠️" });
-    }
-
-    if (success) {
-      toast.success(success, { icon: "🎉" });
-    }
-  }, [error, success]);
 
   return (
     <div className="pt-2 md:pt-[10px]  px-0 md:px-6 pb-[30px]">
