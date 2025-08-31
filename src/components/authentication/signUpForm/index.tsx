@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { Input } from "@/components/ui/input";
 
@@ -20,7 +20,7 @@ import { FaEyeSlash } from "react-icons/fa";
 
 const SignUp = ({ handleChangeTab }: { handleChangeTab?: (value: "login" | "register") => void }) => {
   const [showPassword, setShowPassword] = React.useState(false);
-  const { loading, login, error, success } = useUser();
+  const { loading, register, success } = useUser();
 
   // 1. Define form.
   const form = useForm<SignUpSchema>({
@@ -44,13 +44,14 @@ const SignUp = ({ handleChangeTab }: { handleChangeTab?: (value: "login" | "regi
       password: values.password,
     };
 
-    console.log(data);
-
-    // await login(data, "Login successful!");
-    handleChangeTab && handleChangeTab("login");
-
-    // await login(data, "Login successful!");
+    await register(data, "Registration successful!");
   }
+
+  useEffect(() => {
+    if (success) {
+      handleChangeTab && handleChangeTab("login");
+    }
+  }, [success]);
 
   return (
     <div className="pt-2 md:pt-[10px] px-0 md:px-6 pb-[30px] flex flex-col gap-4">
@@ -101,6 +102,7 @@ const SignUp = ({ handleChangeTab }: { handleChangeTab?: (value: "login" | "regi
             <Input
               {...field}
               placeholder="Password"
+              type={showPassword ? "text" : "password"}
               leftIcon={<GoLock className="text-secondary h-5 w-4" />}
               rightIcon={
                 showPassword ? (

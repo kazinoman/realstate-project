@@ -2,7 +2,7 @@ import React from "react";
 
 import { IoPersonOutline } from "react-icons/io5";
 import { GoLock } from "react-icons/go";
-import { FaEye } from "react-icons/fa";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Typography } from "@/components/ui/typography";
 import { Button } from "@/components/ui/button";
@@ -80,7 +80,13 @@ const LoginForm = () => {
               type={showPassword ? "text" : "password"}
               placeholder="Password"
               leftIcon={<GoLock className="text-secondary h-5 w-4" />}
-              rightIcon={<FaEye className="text-secondary h-5 w-4" onClick={() => setShowPassword(!showPassword)} />}
+              rightIcon={
+                showPassword ? (
+                  <FaEye className="text-secondary h-5 w-4" onClick={() => setShowPassword(!showPassword)} />
+                ) : (
+                  <FaEyeSlash className="text-secondary h-5 w-4" onClick={() => setShowPassword(!showPassword)} />
+                )
+              }
               autoComplete="new-password"
             />
           )}

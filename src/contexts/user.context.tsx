@@ -6,11 +6,12 @@ import { API_URLS } from "@/lib/api/apiUrls";
 import { LoginSchema } from "@/lib/validation/loginForm.validation";
 
 import { useRouter } from "next/navigation";
-import { LoginResponse, UserProfileResponse, User } from "@/types/apiResponse.type";
+import { LoginResponse, UserProfileResponse, User, UserRegistrationResponse } from "@/types/apiResponse.type";
 import { STORAGE_KEYS } from "@/lib/localstorage/localstorage.keys";
 import { localStorageUtils } from "@/lib/localstorage";
 import { toast } from "sonner";
 import { clientCookies } from "@/lib/cookies";
+import { SignUpSchema } from "@/lib/validation/registerForm.validation";
 
 interface UserContextType {
   user: User | null;
@@ -19,6 +20,7 @@ interface UserContextType {
   error: string | null;
   success: string | null;
   login: (data: LoginSchema, successMessage?: string) => Promise<void>;
+  register: (data: SignUpSchema, successMessage?: string) => Promise<void>;
   logout: (successMessage?: string) => Promise<void>;
   resetPassword: (email: string, successMessage?: string) => Promise<void>;
   getUserProfile: (successMessage?: string) => Promise<void>;
@@ -86,6 +88,37 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
         // Redirect to dashboard or home
         // router.push("/dashboard");
+      } catch (err) {
+        const errorMessage = "An unexpected error occurred";
+        setError(errorMessage);
+        toast.error(errorMessage);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [router]
+  );
+
+  const register = useCallback(
+    async (data: SignUpSchema, successMessage = "Registration successful!") => {
+      setLoading(true);
+      setError(null);
+      setSuccess(null);
+
+      try {
+        const response = await apiPost<UserRegistrationResponse["data"]>(API_URLS.auth.register(), data);
+
+        if (!response.data?.success || !response.data?.data) {
+          const errorMessage = response?.data?.error?.message || "Login failed";
+
+          setError(errorMessage);
+          toast.error(errorMessage);
+          setLoading(false);
+          return;
+        }
+
+        setSuccess(response.data.message || successMessage);
+        toast.success(response.data.message || successMessage);
       } catch (err) {
         const errorMessage = "An unexpected error occurred";
         setError(errorMessage);
@@ -244,6 +277,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
         error,
         success,
         login,
+        register,
         logout,
         resetPassword,
         getUserProfile,

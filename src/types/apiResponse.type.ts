@@ -28,8 +28,11 @@ export interface User {
   id: number;
   name: string;
   email: string;
+  phone?: string | null;
+  avatar?: string | null;
 }
 
 // Typed responses
 export type LoginResponse = ApiResponse<LoginResponseData>;
 export type UserProfileResponse = ApiResponse<User>;
+export type UserRegistrationResponse = ApiResponse<User>;
