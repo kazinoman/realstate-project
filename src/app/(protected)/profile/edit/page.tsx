@@ -1,7 +1,15 @@
 import React from "react";
+import EditProfileForm from "@/components/pageComponent/profile/EditProfile";
+import UpdateUserPassword from "@/components/pageComponent/profile/UpdatePassword";
 
-const EditProfile = () => {
-  return <div>EditProfile</div>;
+const EditProfilePage = () => {
+  return (
+    <div className="flex flex-col gap-4">
+      <EditProfileForm />
+
+      <UpdateUserPassword />
+    </div>
+  );
 };
 
-export default EditProfile;
+export default EditProfilePage;

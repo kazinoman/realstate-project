@@ -85,6 +85,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
         setIsAuthenticated(true);
         setSuccess(successMessage);
         toast.success(successMessage);
+        getUserProfile();
 
         // Redirect to dashboard or home
         // router.push("/dashboard");
@@ -189,74 +190,71 @@ export function UserProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const getUserProfile = useCallback(
-    async (successMessage = "Profile fetched successfully!") => {
-      setLoading(true);
-      setError(null);
-      setSuccess(null);
+  async function getUserProfile(successMessage = "Profile fetched successfully!") {
+    setLoading(true);
+    setError(null);
+    setSuccess(null);
 
-      try {
-        const response = await apiGet<UserProfileResponse["data"]>(API_URLS.users.profile());
-        if (response.error) {
-          if (response.error.status === 401) {
-            localStorageUtils.delete(STORAGE_KEYS.ACCESS_TOKEN);
-            localStorageUtils.delete(STORAGE_KEYS.REFRESH_TOKEN);
-            setIsAuthenticated(false);
-            setUser(null);
-            router.push("/");
-            setError("Session expired. Please log in again.");
-            toast.error("Session expired. Please log in again.");
-          } else {
-            const errorMessage = response.error.message || "Failed to fetch user profile";
-            setError(errorMessage);
-            toast.error(errorMessage);
-          }
-          setLoading(false);
-          return;
-        }
-        setUser(response.data!.data!);
-        setIsAuthenticated(true);
-        setSuccess(successMessage);
-        toast.success(successMessage);
-      } catch (err) {
-        const errorMessage = "An unexpected error occurred";
-        setError(errorMessage);
-        toast.error(errorMessage);
-      } finally {
-        setLoading(false);
-      }
-    },
-    [router]
-  );
+    try {
+      const response = await apiGet<UserProfileResponse["data"]>(API_URLS.users.profile());
+      console.log({ response });
+      if (response.error) {
+        if (response.error.status === 401) {
+          localStorageUtils.delete(STORAGE_KEYS.ACCESS_TOKEN);
+          localStorageUtils.delete(STORAGE_KEYS.REFRESH_TOKEN);
 
-  const updateUserProfile = useCallback(
-    async (data: Partial<User>, successMessage = "Profile updated successfully!") => {
-      setLoading(true);
-      setError(null);
-      setSuccess(null);
+          setIsAuthenticated(false);
+          setUser(null);
 
-      try {
-        const response = await apiPatch<UserProfileResponse["data"]>(API_URLS.users.updateProfile(), data);
-        if (response.error) {
-          const errorMessage = response.error.message || "Failed to update user profile";
+          setError("Session expired. Please log in again.");
+          toast.error("Session expired. Please log in again.");
+        } else {
+          const errorMessage = response.error.message || "Failed to fetch user profile";
           setError(errorMessage);
           toast.error(errorMessage);
-          setLoading(false);
-          return;
         }
-        setUser(response.data!.data!);
-        setSuccess(successMessage);
-        toast.success(successMessage);
-      } catch (err) {
-        const errorMessage = "An unexpected error occurred";
+        return;
+      }
+
+      setUser(response.data!.data!);
+      setIsAuthenticated(true);
+      setSuccess(successMessage);
+      toast.success(successMessage);
+    } catch (err) {
+      const errorMessage = "An unexpected error occurred";
+      setError(errorMessage);
+      toast.error(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function updateUserProfile(data: Partial<User>, successMessage = "Profile updated successfully!") {
+    setLoading(true);
+    setError(null);
+    setSuccess(null);
+
+    try {
+      const response = await apiPatch<UserProfileResponse["data"]>(API_URLS.users.updateProfile(), data);
+      if (response.error) {
+        const errorMessage = response.error.message || "Failed to update user profile";
         setError(errorMessage);
         toast.error(errorMessage);
-      } finally {
-        setLoading(false);
+        return;
       }
-    },
-    []
-  );
+      setUser(response.data!.data!);
+      setSuccess(successMessage);
+      toast.success(successMessage);
+    } catch (err) {
+      const errorMessage = "An unexpected error occurred";
+      setError(errorMessage);
+      toast.error(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  // Check if user is authenticated
 
   useEffect(() => {
     const accessToken = localStorageUtils.get<string>(STORAGE_KEYS.ACCESS_TOKEN);
@@ -266,7 +264,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
       setIsAuthenticated(true);
       getUserProfile();
     }
-  }, [getUserProfile]);
+  }, []);
 
   return (
     <UserContext.Provider

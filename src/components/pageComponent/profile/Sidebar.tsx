@@ -108,8 +108,8 @@ export default function ProfileSidebar() {
   );
 
   return (
-    <div className="font-poppins p-[10px] h-full bg-white-50 rounded-2xl border border-default">
-      <div className="flex flex-col gap-2">
+    <div className="font-poppins p-1 md:p-[10px] h-full bg-white-50 rounded-2xl border border-default">
+      <div className="flex flex-col md:gap-2">
         <div className="flex items-center justify-between gap-4 bg-[#f2e9e0] p-2 rounded-xl">
           {/* User Info */}
           <div className="flex items-center justify-between gap-4">
@@ -128,9 +128,15 @@ export default function ProfileSidebar() {
           </div>
           <div>
             {open ? (
-              <IoIosClose className="h-8 w-8 text-secondary block md:hidden" onClick={() => setOpen((prev) => !prev)} />
+              <IoClose
+                className="h-6 w-6 sm:h-8 sm:w-8 text-secondary block md:hidden"
+                onClick={() => setOpen((prev) => !prev)}
+              />
             ) : (
-              <IoIosMenu className="h-8 w-8 text-secondary block md:hidden" onClick={() => setOpen((prev) => !prev)} />
+              <IoIosMenu
+                className="h-6 w-6 sm:h-8 sm:w-8 text-secondary block md:hidden"
+                onClick={() => setOpen((prev) => !prev)}
+              />
             )}
             <LiaUserEditSolid
               className="text-2xl mr-2 text-secondary hidden md:block cursor-pointer"

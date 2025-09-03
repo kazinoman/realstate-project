@@ -14,7 +14,7 @@ export const API_URLS = {
     create: () => `${BASE_URL}/users`,
     update: (id: string | number) => `${BASE_URL}/users/${id}`,
     delete: (id: string | number) => `${BASE_URL}/users/${id}`,
-    profile: () => `${BASE_URL}/auth/me`,
+    profile: () => `${BASE_URL}/users/me`,
     updateProfile: () => `${BASE_URL}/users/profile`,
   },
 
