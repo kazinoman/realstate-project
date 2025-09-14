@@ -180,7 +180,7 @@ const Header = () => {
                 <Link href={profileUrl.profile}>
                   <div className="hidden lg:flex items-center justify-between gap-8 cursor-pointer group">
                     <div className="flex flex-col">
-                      <span className="text-xs md:text-[14px] font-semibold">Welcome : user</span>
+                      <span className="text-xs md:text-[14px] font-semibold">Welcome : {user?.name}</span>
                       <span className="text-xs text-gray-500">{user?.email}</span>
                     </div>
                     <div className="w-[50px] h-[50px] rounded-full shadow-xl transition-shadow duration-600 ease-in-out overflow-hidden group-hover:drop-shadow-2xl">

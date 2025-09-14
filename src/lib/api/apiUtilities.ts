@@ -45,7 +45,7 @@ const apiRequest = async <T>(
     }
     return { data: response.data, error: undefined };
   } catch (error: any) {
-    console.error(`${method.toUpperCase()} Error:`, error);
+    // console.error(`${method.toUpperCase()} Error:`, error);
     return {
       data: null,
       error: {

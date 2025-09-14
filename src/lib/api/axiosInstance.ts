@@ -39,7 +39,7 @@ axiosInstance.interceptors.response.use(
   async (error: AxiosError) => {
     if (error.response?.status === 401) {
       // Custom 401 handler: e.g., logout, redirect to login, or refresh token
-      console.error("Unauthorized (401): Redirecting to login...");
+      // console.error("Unauthorized (401): Redirecting to login...");
 
       // Example: Attempt token refresh (implement your logic)
       // const refreshToken = localStorage.getItem('refreshToken');
@@ -66,7 +66,7 @@ axiosInstance.interceptors.response.use(
       // }
 
       // For now, just reject with a message (customize as needed)
-      return Promise.reject(new Error("Session expired. Please log in again."));
+      return Promise.reject(error);
     }
     return Promise.reject(error);
   }

@@ -108,7 +108,7 @@ export default function ProfileSidebar() {
   );
 
   return (
-    <div className="font-poppins p-1 md:p-[10px] h-full bg-white-50 rounded-2xl border border-default">
+    <div className="font-poppins p-1 md:p-[10px] bg-white-50 rounded-2xl h-fit sticky top-[20px]">
       <div className="flex flex-col md:gap-2">
         <div className="flex items-center justify-between gap-4 bg-[#f2e9e0] p-2 rounded-xl">
           {/* User Info */}
@@ -122,7 +122,7 @@ export default function ProfileSidebar() {
               className="w-[50px] h-[50px] rounded-xl shadow-xl"
             />
             <div className="flex flex-col">
-              <span className="text-xs md:text-[14px] font-semibold">Welcome : user</span>
+              <span className="text-xs md:text-[14px] font-semibold">Welcome : {user?.name}</span>
               <span className="text-xs text-gray-500">{user?.email}</span>
             </div>
           </div>

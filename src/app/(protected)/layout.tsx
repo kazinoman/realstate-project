@@ -8,6 +8,7 @@ export default function ProfileLayout({ children }: { children: React.ReactNode 
         <aside className="md:col-span-4 bg-gray-50 sticky top-[20px] z-30">
           <ProfileSidebar />
         </aside>
+
         <main className="md:col-span-8 rounded-lg ">{children}</main>
       </div>
     </Container>

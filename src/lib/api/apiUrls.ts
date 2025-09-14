@@ -15,7 +15,7 @@ export const API_URLS = {
     update: (id: string | number) => `${BASE_URL}/users/${id}`,
     delete: (id: string | number) => `${BASE_URL}/users/${id}`,
     profile: () => `${BASE_URL}/users/me`,
-    updateProfile: () => `${BASE_URL}/users/profile`,
+    updateProfile: () => `${BASE_URL}/users/me`,
   },
 
   // Add more endpoints as needed, e.g., auth, products, etc.

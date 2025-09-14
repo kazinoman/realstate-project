@@ -1,17 +1,17 @@
 "use client";
 
 import { createContext, useContext, useState, useCallback, ReactNode, useEffect } from "react";
-import { apiPost, apiGet, apiPatch } from "@/lib/api/apiUtilities";
-import { API_URLS } from "@/lib/api/apiUrls";
-import { LoginSchema } from "@/lib/validation/loginForm.validation";
-
+import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+
+import { apiPost, apiGet, apiPut } from "@/lib/api/apiUtilities";
+import { LoginSchema } from "@/lib/validation/loginForm.validation";
+import { API_URLS } from "@/lib/api/apiUrls";
 import { LoginResponse, UserProfileResponse, User, UserRegistrationResponse } from "@/types/apiResponse.type";
 import { STORAGE_KEYS } from "@/lib/localstorage/localstorage.keys";
-import { localStorageUtils } from "@/lib/localstorage";
-import { toast } from "sonner";
-import { clientCookies } from "@/lib/cookies";
 import { SignUpSchema } from "@/lib/validation/registerForm.validation";
+import { localStorageUtils } from "@/lib/localstorage";
+import { clientCookies } from "@/lib/cookies";
 
 interface UserContextType {
   user: User | null;
@@ -235,17 +235,20 @@ export function UserProvider({ children }: { children: ReactNode }) {
     setSuccess(null);
 
     try {
-      const response = await apiPatch<UserProfileResponse["data"]>(API_URLS.users.updateProfile(), data);
+      const response = await apiPut<UserProfileResponse["data"]>(API_URLS.users.updateProfile(), data);
       if (response.error) {
         const errorMessage = response.error.message || "Failed to update user profile";
         setError(errorMessage);
         toast.error(errorMessage);
         return;
       }
+
       setUser(response.data!.data!);
       setSuccess(successMessage);
       toast.success(successMessage);
     } catch (err) {
+      console.log({ err });
+
       const errorMessage = "An unexpected error occurred";
       setError(errorMessage);
       toast.error(errorMessage);
