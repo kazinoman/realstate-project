@@ -40,8 +40,7 @@ const ForgetPasswordComponent = async ({
       break;
     default:
       ComponentToRender = () => (
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-2xl font-semibold mb-4 text-primary">Forgot Password</h2>
+        <div className="bg-white rounded-lg shadow-2xl p-6">
           <p className="text-text-secondary">
             Please select a section using the URL parameter `section` (e.g., ?section=email).
           </p>
@@ -50,8 +49,7 @@ const ForgetPasswordComponent = async ({
   }
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6 text-primary">Forgot Password</h1>
+    <div className="container mx-auto p-4 h-[calc(100dvh-164px)] flex items-center justify-center">
       <ComponentToRender />
     </div>
   );

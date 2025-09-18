@@ -44,6 +44,12 @@ const UpdateUserPassword = () => {
       currentPassword: data.currentPassword,
       newPassword: data.newPassword,
     });
+
+    setShowPassword({
+      currentPassword: false,
+      newPassword: false,
+      confirmPassword: false,
+    });
   };
 
   return (
