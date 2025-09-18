@@ -5,7 +5,7 @@ import { FormField } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import LoaderOverlay from "@/components/ui/loader";
 import { Typography } from "@/components/ui/typography";
-import { useUser } from "@/contexts/user.context";
+import { useUserContext } from "@/contexts/user.context";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { AiOutlineMail } from "react-icons/ai";
@@ -13,7 +13,7 @@ import { CiUser } from "react-icons/ci";
 import { FiPhone } from "react-icons/fi";
 
 const EditProfileForm = () => {
-  const { user, loading, updateUserProfile } = useUser();
+  const { user, loading, updateUserProfile } = useUserContext();
 
   // 1. Define form.
   const form = useForm({

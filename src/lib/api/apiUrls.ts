@@ -25,6 +25,7 @@ export const API_URLS = {
     register: () => `${BASE_URL}/auth/register`,
     refreshToken: () => `${BASE_URL}/auth/refresh`,
     resetPassword: () => `${BASE_URL}/auth/reset-password`,
+    changePassword: () => `${BASE_URL}/auth/change-password`,
   },
 
   // Example for products

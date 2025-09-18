@@ -7,7 +7,13 @@ import { useRouter } from "next/navigation";
 import { apiPost, apiGet, apiPut } from "@/lib/api/apiUtilities";
 import { LoginSchema } from "@/lib/validation/loginForm.validation";
 import { API_URLS } from "@/lib/api/apiUrls";
-import { LoginResponse, UserProfileResponse, User, UserRegistrationResponse } from "@/types/apiResponse.type";
+import {
+  LoginResponse,
+  UserProfileResponse,
+  User,
+  UserRegistrationResponse,
+  ChangePasswordResponse,
+} from "@/types/apiResponse.type";
 import { STORAGE_KEYS } from "@/lib/localstorage/localstorage.keys";
 import { SignUpSchema } from "@/lib/validation/registerForm.validation";
 import { localStorageUtils } from "@/lib/localstorage";
@@ -26,6 +32,7 @@ interface UserContextType {
   getUserProfile: (successMessage?: string) => Promise<void>;
   updateUserProfile: (data: Partial<User>, successMessage?: string) => Promise<void>;
   clearMessages: () => void;
+  changePassword: (data: { currentPassword: string; newPassword: string }, successMessage?: string) => Promise<void>;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -82,7 +89,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
         clientCookies.set(STORAGE_KEYS.ACCESS_TOKEN, accessToken);
         clientCookies.set(STORAGE_KEYS.REFRESH_TOKEN, refreshToken);
 
-        setIsAuthenticated(true);
+        // setIsAuthenticated(true);
         setSuccess(successMessage);
         toast.success(successMessage);
         getUserProfile();
@@ -197,7 +204,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
     try {
       const response = await apiGet<UserProfileResponse["data"]>(API_URLS.users.profile());
-      console.log({ response });
+
       if (response.error) {
         if (response.error.status === 401) {
           localStorageUtils.delete(STORAGE_KEYS.ACCESS_TOKEN);
@@ -216,10 +223,14 @@ export function UserProvider({ children }: { children: ReactNode }) {
         return;
       }
 
-      setUser(response.data!.data!);
-      setIsAuthenticated(true);
-      setSuccess(successMessage);
-      toast.success(successMessage);
+      // Currently api response is not consistent, thats why this check.
+      if (response?.data?.success) {
+        console.log({ response });
+        setUser(response.data!.data!);
+        setIsAuthenticated(true);
+        setSuccess(successMessage);
+        toast.success(successMessage);
+      }
     } catch (err) {
       const errorMessage = "An unexpected error occurred";
       setError(errorMessage);
@@ -257,14 +268,47 @@ export function UserProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  // Check if user is authenticated
+  const changePassword = useCallback(
+    async (
+      data: { currentPassword: string; newPassword: string },
+      successMessage = "Password changed successfully!"
+    ) => {
+      setLoading(true);
+      setError(null);
+      setSuccess(null);
 
+      try {
+        const response = await apiPost<any>(API_URLS.auth.changePassword(), data);
+
+        if (response?.data?.error) {
+          const errorMessage = response?.data?.error?.message || "Change password failed";
+          setError(errorMessage);
+          toast.error(errorMessage);
+          setLoading(false);
+          return;
+        }
+
+        if (response?.data?.success) {
+          setSuccess(successMessage);
+          toast.success(successMessage);
+        }
+      } catch (err) {
+        const errorMessage = "An unexpected error occurred";
+        setError(errorMessage || "Change password failed");
+        toast.error(errorMessage);
+      } finally {
+        setLoading(false);
+      }
+    },
+    []
+  );
+
+  // Check if user is authenticated
   useEffect(() => {
     const accessToken = localStorageUtils.get<string>(STORAGE_KEYS.ACCESS_TOKEN);
-    console.log("accessToken", accessToken);
 
     if (accessToken) {
-      setIsAuthenticated(true);
+      // setIsAuthenticated(true); // need to remove later.
       getUserProfile();
     }
   }, []);
@@ -284,6 +328,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
         getUserProfile,
         updateUserProfile,
         clearMessages,
+        changePassword,
       }}
     >
       {children}
@@ -291,7 +336,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
   );
 }
 
-export function useUser() {
+export function useUserContext() {
   const context = useContext(UserContext);
   if (!context) {
     throw new Error("useUser must be used within a UserProvider");

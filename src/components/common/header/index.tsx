@@ -15,7 +15,7 @@ import Modal from "@/components/ui/modal";
 import AuthenticationComponent from "@/components/authentication";
 import ModalCloseIcon from "@/components/ui/modalCloseIcon";
 import { useBreakpoint } from "@/hooks/useBreakpoint";
-import { useUser } from "@/contexts/user.context";
+import { useUserContext } from "@/contexts/user.context";
 import Container from "../container";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
@@ -33,7 +33,7 @@ const Header = () => {
   const [activeTab, setActiveTab] = useState<string>("sale");
   const [isOpen, setIsOpen] = useState(false);
 
-  const { isAuthenticated, user } = useUser();
+  const { isAuthenticated, user } = useUserContext();
   const { isMd, isSm } = useBreakpoint();
 
   const [openLoginModal, setOpenLoginModal] = useState<boolean>(false);

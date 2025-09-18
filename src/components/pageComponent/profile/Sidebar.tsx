@@ -1,6 +1,6 @@
 "use client";
 
-import { useUser } from "@/contexts/user.context";
+import { useUserContext } from "@/contexts/user.context";
 import { Button } from "@/components/ui/button";
 import { useRouter, usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -16,7 +16,7 @@ import { BiSolidDownArrow } from "react-icons/bi";
 import Image from "next/image";
 
 export default function ProfileSidebar() {
-  const { user, logout, isAuthenticated } = useUser();
+  const { user, logout, isAuthenticated } = useUserContext();
   const router = useRouter();
   const pathname = usePathname();
 

@@ -32,7 +32,13 @@ export interface User {
   avatar?: string | null;
 }
 
+export interface IChangePasswordResponse {
+  success: boolean;
+  message: string;
+}
+
 // Typed responses
 export type LoginResponse = ApiResponse<LoginResponseData>;
 export type UserProfileResponse = ApiResponse<User>;
 export type UserRegistrationResponse = ApiResponse<User>;
+export type ChangePasswordResponse = ApiResponse<IChangePasswordResponse>;

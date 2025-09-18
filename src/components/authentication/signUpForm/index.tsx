@@ -14,13 +14,13 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import signUpSchema, { SignUpSchema } from "@/lib/validation/registerForm.validation";
 import LoaderOverlay from "@/components/ui/loader";
-import { useUser } from "@/contexts/user.context";
+import { useUserContext } from "@/contexts/user.context";
 import { FormField } from "@/components/ui/form";
 import { FaEyeSlash } from "react-icons/fa";
 
 const SignUp = ({ handleChangeTab }: { handleChangeTab?: (value: "login" | "register") => void }) => {
   const [showPassword, setShowPassword] = React.useState(false);
-  const { loading, register, success } = useUser();
+  const { loading, register, success } = useUserContext();
 
   // 1. Define form.
   const form = useForm<SignUpSchema>({

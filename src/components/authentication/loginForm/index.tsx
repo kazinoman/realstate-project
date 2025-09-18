@@ -17,11 +17,11 @@ import { FormField } from "@/components/ui/form";
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import LoaderOverlay from "@/components/ui/loader";
 
-import { useUser } from "@/contexts/user.context";
+import { useUserContext } from "@/contexts/user.context";
 
 const LoginForm = () => {
   const [showPassword, setShowPassword] = React.useState(false);
-  const { loading, login, error, success } = useUser();
+  const { loading, login, error, success } = useUserContext();
 
   // 1. Define form.
   const form = useForm<LoginSchema>({
