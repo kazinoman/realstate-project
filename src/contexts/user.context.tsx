@@ -28,11 +28,12 @@ interface UserContextType {
   login: (data: LoginSchema, successMessage?: string) => Promise<void>;
   register: (data: SignUpSchema, successMessage?: string) => Promise<void>;
   logout: (successMessage?: string) => Promise<void>;
-  resetPassword: (email: string, successMessage?: string) => Promise<void>;
   getUserProfile: (successMessage?: string) => Promise<void>;
   updateUserProfile: (data: Partial<User>, successMessage?: string) => Promise<void>;
   clearMessages: () => void;
   changePassword: (data: { currentPassword: string; newPassword: string }, successMessage?: string) => Promise<void>;
+  sendOtpInEmail: (data: { email: string }, successMessage?: string) => any;
+  resetPassword: (data: { email: string; code: string; newPassword: string }, successMessage?: string) => any;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -172,31 +173,6 @@ export function UserProvider({ children }: { children: ReactNode }) {
     [router]
   );
 
-  const resetPassword = useCallback(async (email: string, successMessage = "Password reset email sent!") => {
-    setLoading(true);
-    setError(null);
-    setSuccess(null);
-
-    try {
-      const response = await apiPost<unknown>(API_URLS.auth.resetPassword(), { email });
-      if (response.error) {
-        const errorMessage = response.error.message || "Reset password failed";
-        setError(errorMessage);
-        toast.error(errorMessage);
-        setLoading(false);
-        return;
-      }
-      setSuccess(successMessage);
-      toast.success(successMessage);
-    } catch (err) {
-      const errorMessage = "An unexpected error occurred";
-      setError(errorMessage);
-      toast.error(errorMessage);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
   async function getUserProfile(successMessage = "Profile fetched successfully!") {
     setLoading(true);
     setError(null);
@@ -303,6 +279,80 @@ export function UserProvider({ children }: { children: ReactNode }) {
     []
   );
 
+  const sendOtpInEmail = useCallback(async (data: { email: string }, successMessage = "Email send successfully!") => {
+    setLoading(true);
+    setError(null);
+    setSuccess(null);
+
+    try {
+      const response = await apiPost<any>(API_URLS.auth.sendOtpInEmail(), data);
+
+      console.log({ response });
+
+      if (response?.data?.error) {
+        const errorMessage = response?.data?.error?.message || "Send mail failed";
+        setError(errorMessage);
+        toast.error(errorMessage);
+        setLoading(false);
+        return;
+      }
+
+      if (response?.data?.success) {
+        setSuccess(successMessage);
+        toast.success(successMessage);
+        return response;
+      }
+    } catch (err) {
+      const errorMessage = "An unexpected error occurred";
+      setError(errorMessage || "Send mail failed");
+      toast.error(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const resetPassword = useCallback(
+    async (
+      data: {
+        email: string;
+        code: string;
+        newPassword: string;
+      },
+      successMessage = "Password has been reset successfully."
+    ) => {
+      setLoading(true);
+      setError(null);
+      setSuccess(null);
+
+      try {
+        const response = await apiPost<any>(API_URLS.auth.resetPassword(), data);
+
+        if (response?.data?.error) {
+          const errorMessage = response?.data?.error?.message || "Password reset failed.";
+          setError(errorMessage);
+          toast.error(errorMessage);
+          setLoading(false);
+          return;
+        }
+
+        if (response?.data?.success) {
+          setSuccess(successMessage);
+          toast.success(successMessage);
+          localStorageUtils.delete(STORAGE_KEYS.STORE_EMAIL);
+
+          return response;
+        }
+      } catch (err) {
+        const errorMessage = "An unexpected error occurred";
+        setError(errorMessage || "Password reset failed");
+        toast.error(errorMessage);
+      } finally {
+        setLoading(false);
+      }
+    },
+    []
+  );
+
   // Check if user is authenticated
   useEffect(() => {
     const accessToken = localStorageUtils.get<string>(STORAGE_KEYS.ACCESS_TOKEN);
@@ -324,11 +374,13 @@ export function UserProvider({ children }: { children: ReactNode }) {
         login,
         register,
         logout,
-        resetPassword,
+
         getUserProfile,
         updateUserProfile,
         clearMessages,
         changePassword,
+        sendOtpInEmail,
+        resetPassword,
       }}
     >
       {children}

@@ -8,6 +8,8 @@ export const STORAGE_KEYS = {
 
   USER_PREFS: "user_prefs",
   RECENT_ITEMS: "recent_items",
+
+  STORE_EMAIL: "email",
 } as const;
 
 export type LocalStorageKeys = keyof typeof STORAGE_KEYS;

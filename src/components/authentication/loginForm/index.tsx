@@ -18,10 +18,17 @@ import { Alert, AlertTitle } from "@/components/ui/alert";
 import LoaderOverlay from "@/components/ui/loader";
 
 import { useUserContext } from "@/contexts/user.context";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
-const LoginForm = () => {
+interface ILoginFormProps {
+  handleCloseLoginModal: () => void;
+}
+
+const LoginForm = ({ handleCloseLoginModal }: ILoginFormProps) => {
   const [showPassword, setShowPassword] = React.useState(false);
   const { loading, login, error, success } = useUserContext();
+  const router = useRouter();
 
   // 1. Define form.
   const form = useForm<LoginSchema>({
@@ -45,6 +52,12 @@ const LoginForm = () => {
 
     await login(data, "Login successful!");
   }
+
+  const handleGotoForgotPassword = () => {
+    handleCloseLoginModal();
+
+    router.push("/forget-password?section=email");
+  };
 
   return (
     <div className="pt-2 md:pt-[10px]  px-0 md:px-6 pb-[30px]">
@@ -100,7 +113,12 @@ const LoginForm = () => {
 
         <div className="flex items-center justify-between py-2">
           <Checkbox label="Remember me" />
-          <Typography variant="muted" className="text-xs hover:underline cursor-pointer font-semibold">
+
+          <Typography
+            onClick={handleGotoForgotPassword}
+            variant="muted"
+            className="text-xs hover:underline cursor-pointer font-semibold"
+          >
             Lost Your Password?
           </Typography>
         </div>

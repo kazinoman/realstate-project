@@ -358,7 +358,7 @@ const Header = () => {
             <div className="items-center justify-center p-2  bg-white/30 rounded-2xl z-10">
               <ModalCloseIcon onClose={() => setOpenLoginModal(false)} />
               <div className="bg-white rounded-lg shadow-2xl min-w-[300px]">
-                <AuthenticationComponent />
+                <AuthenticationComponent handleCloseLoginModal={() => setOpenLoginModal(false)} />
               </div>
             </div>
           </Modal>

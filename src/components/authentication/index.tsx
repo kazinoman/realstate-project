@@ -7,7 +7,11 @@ import { IoIosPersonAdd } from "react-icons/io";
 import SignUp from "./signUpForm";
 import LoginForm from "./loginForm";
 
-const AuthenticationComponent = () => {
+interface IAuthenticationComponentProps {
+  handleCloseLoginModal: () => void;
+}
+
+const AuthenticationComponent = ({ handleCloseLoginModal }: IAuthenticationComponentProps) => {
   const [tabValue, setTabValue] = React.useState<"login" | "register">("login");
 
   const handleChangeTab = (value: "login" | "register") => {
@@ -22,7 +26,7 @@ const AuthenticationComponent = () => {
       icon: IoLogInOutline,
       content: (
         <div className="p-4">
-          <LoginForm />
+          <LoginForm handleCloseLoginModal={handleCloseLoginModal} />
         </div>
       ),
     },

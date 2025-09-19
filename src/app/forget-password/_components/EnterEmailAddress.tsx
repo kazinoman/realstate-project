@@ -1,17 +1,25 @@
 "use client";
 
+import React from "react";
+import Image from "next/image";
+import { useForm } from "react-hook-form";
+
 import { Button } from "@/components/ui/button";
 import { Form, FormField } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import React from "react";
 import { AiOutlineMail } from "react-icons/ai";
-import { useForm } from "react-hook-form";
 import { Alert, AlertTitle } from "@/components/ui/alert";
+import { useUserContext } from "@/contexts/user.context";
+import { useRouter } from "next/navigation";
+import LoaderOverlay from "@/components/ui/loader";
+import { localStorageUtils } from "@/lib/localstorage";
+import { STORAGE_KEYS } from "@/lib/localstorage/localstorage.keys";
 
 const EnterEmailAddress = () => {
-  // 1. Define form.
+  const router = useRouter();
+  const { sendOtpInEmail, loading } = useUserContext();
+
   const form = useForm({
-    // resolver: zodResolver(signUpSchema),
     defaultValues: {
       email: "",
     },
@@ -22,14 +30,27 @@ const EnterEmailAddress = () => {
   } = form;
 
   const handleSendEmail = async (data: any) => {
-    console.log(data);
+    const res = await sendOtpInEmail({
+      email: data.email,
+    });
+
+    if (res?.data.success) {
+      router.push("/forget-password?section=code");
+
+      localStorageUtils.set(STORAGE_KEYS.STORE_EMAIL, data.email);
+    }
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md mx-auto flex flex-col gap-10">
-      <div>
-        <h2 className="text-2xl font-semibold mb-2 text-primary">Enter Your Email</h2>
-        <p className="text-gray-400 font-semibold text-xs mb-4">
+    <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md mx-auto flex flex-col ">
+      {loading && <LoaderOverlay />}
+
+      <div className="flex flex-col items-center justify-between">
+        <h2 className="text-base md:text-base lg:text-2xl font-semibold mb-2 text-primary self-start">
+          Enter Your Email
+        </h2>
+        <Image src={"/images/email_verification_step.gif"} className="" alt="" width={400} height={300} />
+        <p className="text-gray-400 font-semibold text-[10px] md:text-xs mb-4">
           We’ve sent a one-time password (OTP) to your email. Please check your inbox and follow the instructions to
           continue. If you don’t see the email, kindly check your spam or junk folder.
         </p>

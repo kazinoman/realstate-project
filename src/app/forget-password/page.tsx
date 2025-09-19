@@ -1,7 +1,8 @@
 import React from "react";
 import NewPasswordForm from "./_components/NewPasswordForm";
-import VerificationCodeComponent from "./_components/VerificationCodeComponent";
+
 import EnterEmailAddress from "./_components/EnterEmailAddress";
+import { OTPVerification } from "./_components/VerificationCodeComponent";
 
 const ForgetPasswordComponent = async ({
   searchParams,
@@ -33,7 +34,7 @@ const ForgetPasswordComponent = async ({
       ComponentToRender = EnterEmailAddress;
       break;
     case "code":
-      ComponentToRender = VerificationCodeComponent;
+      ComponentToRender = OTPVerification;
       break;
     case "new-password":
       ComponentToRender = NewPasswordForm;
